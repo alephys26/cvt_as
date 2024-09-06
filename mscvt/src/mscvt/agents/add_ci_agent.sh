@@ -16,7 +16,7 @@ for i in $(seq 1 $n); do
 campus_incharge_$i = Agent(
     role='Campus Incharge',
     goal="To facilitate visitors to meet their intended host inside the campus from main gate to host's location.",
-    tools=[CITools()],
+    tools=[CITools(result_as_answer=True)],
     memory=True,
     verbose=True
 )

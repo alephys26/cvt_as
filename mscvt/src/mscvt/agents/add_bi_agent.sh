@@ -16,7 +16,7 @@ for i in $(seq 1 $n); do
 building_incharge_$i = Agent(
     role='Building Incharge',
     goal='To facilitate visitors to meet their intended host inside their building of care.',
-    tools=[replyToCI()],
+    tools=[replyToCI(result_as_answer=True)],
     memory=True,
     verbose=True
 )
