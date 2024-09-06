@@ -16,7 +16,7 @@ for i in $(seq 1 $n); do
 visitor_$i = Agent(
     role='Visitor',
     goal="Meet host at the host's location",
-    tools=[visitorTools()],
+    tools=[visitorTools(result_as_answer=True)],
     memory=True,
     verbose=True
 )
