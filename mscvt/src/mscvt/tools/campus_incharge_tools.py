@@ -67,7 +67,7 @@ class CITools(BaseTool):
 
         # Clear the memory of agent
         if self.agent.memory['host_path']:
-            del self.agent.memory['host_path']
+            self.agent.memory['host_path']=None
 
         self.agent.memory['host'] = None
 
