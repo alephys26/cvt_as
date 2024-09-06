@@ -23,4 +23,4 @@ building_incharge_$i = Agent(
 
 EOT
 done
-echo "$n Buildin Incharge Agent code has been added to ../agent.py."
+echo "$n Building Incharge Agent code has been added to ../agent.py."

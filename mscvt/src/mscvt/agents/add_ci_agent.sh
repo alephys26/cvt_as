@@ -15,7 +15,7 @@ for i in $(seq 1 $n); do
 
 campus_incharge_$i = Agent(
     role='Campus Incharge',
-    goal='To facilitate visitors to meet their intended host inside the campus from main gate to location.',
+    goal="To facilitate visitors to meet their intended host inside the campus from main gate to host's location.",
     tools=[CITools()],
     memory=True,
     verbose=True
@@ -23,4 +23,4 @@ campus_incharge_$i = Agent(
 
 EOT
 done
-echo "$n Buildin Incharge Agent code has been added to ../agent.py."
+echo "$n Campus Incharge Agent code has been added to ../agent.py."

@@ -12,7 +12,7 @@ class CITools(BaseTool):
     def acceptVisitor(self, host, host_location, visitor_id):
 
         # Safety Check return false if there is already a visitor
-        if (self.agent.memory['visitor']):
+        if (self.agent.memory['visitor'] == None):
             return False
 
         # Saving details in Agent Memory
@@ -22,41 +22,70 @@ class CITools(BaseTool):
 
         return True
 
-    def travelToBuildingLocation(self, shortest_distance_table):
+    def travelToBuildingLocation(self):
         """
-            For Agent to travel to the building destination
-            args:
-                shortest_distance_table-> Pre Computed Hash Table calculated using Djikstra's Algorithm
+        For Agent to travel to the building destination
+        Shortest_distance_table-> Pre Computed Hash Table calculated using Djikstra's Algorithm
         """
 
         # Updating Agent Location
+        path, distance = self.agent.memory['path'][self.agent.memory['destination']]
 
-        self.agent.memory['location'] = self.agent.memory["destination"]
+        # TODO : Path Traversal Using ROS
+        self.agent.memory['location'] = self.agent.memory['destination']
+        return self.talkWithBI()
+
+    def talkWithBI(self):
+
+        # TODO : Send Message via ROS to BI
+        # Receive 2 parameters -> instruction, path
+        instruction = 'WAIT'
+        path = {}
+
+        if instruction == 'WAIT':
+            counter = 0
+            while instruction == 'WAIT' and counter < 25:
+                counter += 1
+                time.sleep(3)
+                # TODO : Send Message again with ROS
+
+        if instruction == 'GO':
+            self.agent.memory['host_path'] = path
+            self.travelToHost()
+
+        return self.goBack()
+
+    def travelToHost(self):
+
+        # TODO: Path Traversal using ROS to Host Location
+
+        # Waiting Time
+        time.sleep(3)
+        return
+
+    def goBack(self):
+
+        # Clear the memory of agent
+        if self.agent.memory['host_path']:
+            self.agent.memory['host_path']=None
+
+        self.agent.memory['host'] = None
+
+        # TODO : Traverse to main-gate via ROS
+
+        self.agent.memory['location'] = 'main_gate'
+        self.agent.memory['visitor'] = None
+        self.agent.memory['destination'] = None
 
     def _run(self):
-        pass
-        # When visitor arrives to a free CI
 
+        # TODO: Get details of visitor from ROS
+        host = ""
+        visitor_id = 0
+        host_location = ""
 
-class acceptVisitor:
-    pass
+        if self.acceptVisitor(host, host_location, visitor_id):
+            self.travelToBuildingLocation()
 
-
-# Take visitor to host's building
-class travelToBuildingLocation:
-    pass
-
-
-# Talk with Building Incharge to know host's location inside building
-class talkWithBI:
-    pass
-
-
-# Go to host's location inside building
-class travelToHost:
-    pass
-
-
-# Escort visitor back to main gate after meeting with host.
-class goBack:
-    pass
+        else:
+            return "OCCUPIED"
