@@ -7,7 +7,7 @@ class replyToCI(BaseTool):
     description = "Reply to CI's request."
 
     def __call__(self):
-        self._run()
+        return self._run()
 
     def checkHostPresence(self, host):
         return host in self.agent.memory['map']
