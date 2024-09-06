@@ -12,7 +12,7 @@ class CITools(BaseTool):
     def acceptVisitor(self, host, host_location, visitor_id):
 
         # Safety Check return false if there is already a visitor
-        if (self.agent.memory['visitor']):
+        if (self.agent.memory['visitor'] == None):
             return False
 
         # Saving details in Agent Memory
@@ -33,7 +33,7 @@ class CITools(BaseTool):
 
         # TODO : Path Traversal Using ROS
         self.agent.memory['location'] = self.agent.memory['destination']
-        self.talkWithBI()
+        return self.talkWithBI()
 
     def talkWithBI(self):
 
@@ -53,8 +53,7 @@ class CITools(BaseTool):
             self.agent.memory['host_path'] = path
             self.travelToHost()
 
-        self.goBack()
-        return
+        return self.goBack()
 
     def travelToHost(self):
 
@@ -70,12 +69,13 @@ class CITools(BaseTool):
         if self.agent.memory['host_path']:
             del self.agent.memory['host_path']
 
+        self.agent.memory['host'] = None
+
         # TODO : Traverse to main-gate via ROS
 
-        del self.agent.memory['location']
-        del self.agent.memory['visitor']
-        del self.agent.memory['host']
-        del self.agent.memory['destination']
+        self.agent.memory['location'] = 'main_gate'
+        self.agent.memory['visitor'] = None
+        self.agent.memory['destination'] = None
 
     def _run(self):
 
@@ -88,4 +88,4 @@ class CITools(BaseTool):
             self.travelToBuildingLocation()
 
         else:
-            return "NA"
+            return "OCCUPIED"
