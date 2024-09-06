@@ -2,6 +2,7 @@ from crewai_tools import BaseTool
 import time
 
 
+# TODO: travel_time ###################
 class replyToCI(BaseTool):
     name = "replyToCI"
     description = "Reply to CI's request."
@@ -28,7 +29,7 @@ class replyToCI(BaseTool):
             if self.isVisitorAuthorized(host, visitor):
                 if self.isHostFree(host):
                     self.agent.memory['meet'][host] = time.time(
-                    ) + self.meeting_time
+                    ) + self.meeting_time + self.travel_time
                     return "GO", self.agent.memory['path'][host]
                 else:
                     return "WAIT", None
@@ -41,7 +42,8 @@ class replyToCI(BaseTool):
         return self.isHostFree(self.agent.memory['id'])
 
     def OOSHandler(self):
-        remaining_oos_time = self.agent.memory['meet'][self.agent.memory['id']] - time.time()
+        remaining_oos_time = self.agent.memory['meet'][self.agent.memory['id']
+                                                       ] + self.travel_time - time.time()
         return f"OOS for {remaining_oos_time}", None
 
     def _run(self):
