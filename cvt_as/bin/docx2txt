@@ -1,0 +1,10 @@
+#!/home/yash26/AS/Assignment 1/cvt_as/cvt_as/bin/python3
+
+import docx2txt
+
+if __name__ == '__main__':
+    import sys
+    args = docx2txt.process_args()
+    text = docx2txt.process(args.docx, args.img_dir)
+    output = getattr(sys.stdout, 'buffer', sys.stdout)
+    output.write(text.encode('utf-8'))
