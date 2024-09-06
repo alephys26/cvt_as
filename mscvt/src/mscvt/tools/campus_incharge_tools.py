@@ -9,16 +9,16 @@ class CITools(BaseTool):
     def __call__(self):
         return self._run()
 
-    def acceptVisitor(self, host, host_location,visitor_id):
+    def acceptVisitor(self, host, host_location, visitor_id):
 
-        # Safety Check return false if there is already a host
-        if (self.agent.memory["host"]):
+        # Safety Check return false if there is already a visitor
+        if (self.agent.memory['visitor']):
             return False
 
         # Saving details in Agent Memory
-        self.agent.memory["visitor"]=visitor_id
-        self.agent.memory["host"] = host
-        self.agent.memory["destination"] = host_location
+        self.agent.memory['visitor'] = visitor_id
+        self.agent.memory['host'] = host
+        self.agent.memory['destination'] = host_location
 
         return True
 
@@ -31,8 +31,7 @@ class CITools(BaseTool):
 
         # Updating Agent Location
 
-        self.agent.memory['location']=self.agent.memory["destination"]
-
+        self.agent.memory['location'] = self.agent.memory["destination"]
 
     def _run(self):
         pass
