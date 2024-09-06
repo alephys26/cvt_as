@@ -4,7 +4,7 @@
 
 _Yash Shrivastava, B21CS079_  
 _Anshu Raj, B21AI048_  
-_Manan Jain, B21AI017_  
+_Manan Jain, B21AI021_  
 _Yash Mangal, B21AI047_  
 
 The **main** branch is secured and no commits can be pushed to it without raising a Pull Request which is also approved by anyone of the collaborators. So create a new branch for any new task and raise a PR for it and wait for approval.
