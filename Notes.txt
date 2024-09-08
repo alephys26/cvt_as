@@ -1,2 +1,19 @@
 1. Priority based waiting for visitors.
 2. Meeting Time
+
+Visitor -> Find an available CI
+        -> Meet the host if authorized and available
+
+Campus Incharge -> Find a Visitor and get Host Details
+                -> Take the Visitor to Host Location (Shortest Path)
+                -> Communicate with Building Incharge
+                -> Wait for Host
+                -> OOS condition
+                -> Take the Visitor to Host (Building Location)
+                -> Take the Visitor to Start Location
+
+Building Incharge -> Communicate with Campus Incharge
+                  -> Meet with Visitor
+                  -> Give Path to Campus Incharge
+
+
