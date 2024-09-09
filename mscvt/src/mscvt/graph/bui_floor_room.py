@@ -11,20 +11,48 @@ class CampusMap:
     def add_location(self, location_name, location_type='gate'):
         self.graph.add_node(location_name, type=location_type)
 
+    # def building(self, building_name, floors, rooms):
+    #     bui = nx.DiGraph()
+    #     bui.add_node("Ground Floor")
+    #     bui.add_node(f"{building_name}") 
+    #     bui.add_edge(building_name,"Ground Floor",weight=0)
+
+    #     for i in range(1, floors):
+    #         bui.add_node(f"Floor {i}")
+    #     for i in range(floors):
+    #         if i == 0:
+    #             bui.add_edge("Ground Floor", "Floor 1", weight=1)
+    #         else:
+    #             bui.add_edge(f"Floor {i}", f"Floor {i+1}", weight=1)
+
+    #         # Create star graph for each floor with rooms
+    #         floor_graph = nx.Graph()
+    #         center_node = f"{building_name} Floor {i+1}"
+    #         floor_graph.add_node(center_node)
+
+    #         for room in range(1, rooms + 1):
+    #             room_name = f"Room {room}"
+    #             floor_graph.add_node(room_name)
+    #             floor_graph.add_edge(center_node, room_name, weight=1)
+            
+    #         self.floor_dict[f"{building_name} Floor {i+1}"] = floor_graph
+
+    #     self.building_dict[building_name] = bui
+
     def building(self, building_name, floors, rooms):
         bui = nx.DiGraph()
-        bui.add_node("Ground Floor")
-        for i in range(1, floors):
+        bui.add_node(f"{building_name}") 
+
+        for i in range(1, floors + 1):
             bui.add_node(f"Floor {i}")
-        for i in range(floors):
-            if i == 0:
-                bui.add_edge("Ground Floor", "Floor 1", weight=1)
+            if i == 1:
+                bui.add_edge(building_name, "Floor 1", weight=1)
             else:
-                bui.add_edge(f"Floor {i}", f"Floor {i+1}", weight=1)
+                bui.add_edge(f"Floor {i-1}", f"Floor {i}", weight=1)
 
             # Create star graph for each floor with rooms
             floor_graph = nx.Graph()
-            center_node = f"{building_name} Floor {i+1}"
+            center_node = f"{building_name} Floor {i}"
             floor_graph.add_node(center_node)
 
             for room in range(1, rooms + 1):
@@ -32,9 +60,10 @@ class CampusMap:
                 floor_graph.add_node(room_name)
                 floor_graph.add_edge(center_node, room_name, weight=1)
             
-            self.floor_dict[f"{building_name} Floor {i+1}"] = floor_graph
+            self.floor_dict[f"{building_name} Floor {i}"] = floor_graph
 
         self.building_dict[building_name] = bui
+
 
     def add_path(self, from_location, to_location, weight=1):
         """
@@ -122,7 +151,7 @@ if __name__ == "__main__":
 
     hostel_names = ["G1", "G2", "G3", "G4", "G5", "G6", "B1", "B2", "B3", "B4", "B5", "I2", "I3"]
     for hostel in hostel_names:
-        campus_map.building(hostel, floors=3, rooms=370)
+        campus_map.building(hostel, floors=3, rooms=3)
 
     department_names = ["Office", "Library", "Data Center", "LHC", "BLB", "CSE", "BIO", "Chemical", "Electrical", "Civil", 
                         "Mechanical", "Physics", "SOLA", "SME", "Material Science"]
@@ -182,6 +211,7 @@ if __name__ == "__main__":
     campus_map.add_path("Main Gate", "Staff Quators", weight=7)
 
 
+
     campus_map.visualize_map()
-    # campus_map.visualize_building("I3")
-    # campus_map.visualize_floor("I2", 3)
+    campus_map.visualize_building("I3")
+    campus_map.visualize_floor("I2", 3)
