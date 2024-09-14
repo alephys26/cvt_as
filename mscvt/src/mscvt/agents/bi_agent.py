@@ -3,24 +3,30 @@ import time
 
 
 class BI_Agent(Agent):
-    def __init__(self):
-        # TODO: Correct this using Mangal's code.
-        # This is not the right way to do this.
-        role = 'Building Incharge'
-        goal = 'To facilitate visitors to meet their intended host inside their building of care.'
-        memory = True
-        verbose = True
-        self.map = None
-        self.auth = None
-        self.meet = None
-        self.path = None
-        self.id = None
-        self.meeting_time = None
+    def __init__(self, map, residentList, authorisation, ID):
+        super().__init__(role='Building Incharge',
+                         goal='To facilitate visitors to meet their intended host inside their building of care.',
+                         memory=True,
+                         verbose=True)
+        self.meeting_time = 3
+        self.map = map
+        self.residentList = residentList
+        self.auth = authorisation
+        self.id = ID
+        self.meet = {}
+        for resident in residentList:
+            self.meet[resident] = None
+        self.path = self.getPath()
         # TODO: travel_time ###################
         self.travel_time = None
 
+    def getPath(self):
+        # Run dijkstra algorithm on self.map
+        # return a dict with resident from self.residentList as key and value as graph coordinates to move in path.
+        pass
+
     def chekHostPresence(self, host):
-        return host in self.map
+        return host in self.residentList
 
     def isVisitorAuthorized(self, host, visitor):
         return visitor in self.auth[host]
@@ -56,7 +62,6 @@ class BI_Agent(Agent):
         return f"OOS for {remaining_oos_time}", None
 
     def run(self):
-        self.meeting_time = 3
         if self.isOOS():
             self.OOSHandler()
         return self.tellPath(self.host, self.visitor)

@@ -10,14 +10,15 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/'+package_name, ['rviz_config.rviz']),
     ],
-    install_requires=['setuptools'],
+    install_requires=['setuptools', 'geometry_msgs',
+                      'visualization_msgs'],
     zip_safe=True,
     maintainer='yash26',
     maintainer_email='shrivastavayash26@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
         ],
