@@ -16,6 +16,7 @@ class BI_Agent(Agent):
         self.meet = {}
         for resident in residentList:
             self.meet[resident] = None
+        # path is a dict[key=resident, value=tuple[distance, list[points]]]
         self.path = self.getPath()
         # TODO: travel_time ###################
         self.travel_time = None
