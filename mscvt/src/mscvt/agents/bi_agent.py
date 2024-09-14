@@ -39,29 +39,28 @@ class BI_Agent(Agent):
             return True
         return False
 
-    def tellPath(self, host: str, visitor: str) -> tuple[str, list[tuple[float, float, float]]]:
+    def tellPath(self, host: str, visitor: str) -> tuple[str, int, list[tuple[float, float, float]]]:
         if self.checkHostPresence(host):
             if self.isVisitorAuthorized(host, visitor):
                 if self.isHostFree(host):
                     self.meet[host] = time.time(
                     ) + self.meeting_time + self.travel_time
-                    return "GO", self.path[host]
+                    return "GO", 0, self.path[host]
                 else:
-                    return "WAIT", None
+                    return "WAIT", self.meet[host] - time.time(), []
             else:
-                return "UNAUTHORIZED", None
+                return "UNAUTHORIZED", 0, []
         else:
-            return "DNE", None
+            return "DNE", 0, []
 
     def isOOS(self) -> bool:
         return self.isHostFree(self.Id)
 
     def OOSHandler(self) -> tuple[str, None]:
-        remaining_oos_time = self.meet[self.Id] + \
-            self.travel_time - time.time()
-        return f"OOS for {remaining_oos_time}", None
+        remaining_oos_time = self.meet[self.Id] - time.time()
+        return f"OOS", remaining_oos_time, []
 
-    def run(self, host: str, visitor: str) -> tuple[str, list[tuple[float, float, float]]]:
+    def run(self, host: str, visitor: str) -> tuple[str, int, list[tuple[float, float, float]]]:
         if self.isOOS():
             self.OOSHandler()
         return self.tellPath(host, visitor)
