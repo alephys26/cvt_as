@@ -1,0 +1,5 @@
+String visitorId
+String hostId
+String hostLocation
+---
+String available

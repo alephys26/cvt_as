@@ -1,6 +1,6 @@
 # from xyz_map import xyz
 class Building:
-    def __init__(self, name):
+    def __init__(self, name:str):
         self.name = name
         self.setMyDetails()
 
