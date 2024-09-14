@@ -1,5 +1,5 @@
-String visitorId
-String hostId
-String hostLocation
+string visitorid
+string hostid
+string hostlocation
 ---
-String available
+string available

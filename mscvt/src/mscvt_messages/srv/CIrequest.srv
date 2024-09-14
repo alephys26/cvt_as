@@ -1,0 +1,7 @@
+string visitorid
+string hostid
+string ciid
+---
+string action
+int32 time
+geometry_msgs/Point[] points
