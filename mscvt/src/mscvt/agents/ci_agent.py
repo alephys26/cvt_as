@@ -5,15 +5,20 @@ from std_msgs.msg import String
 
 
 class CI_Agent(Agent):
-    def __init__(self, id):
-        super().__init__()
+    def __init__(self, ID: str, map):
+        super().__init__(
+            role='Campus Incharge',
+            goal='To facilitate visitors to meet their intended host inside the campus from main gate to host location.',
+            memory=True,
+            verbose=True
+        )
+
         self.visitor = None
         self.host = None
         self.destination = None
-        self.path = None
         self.location = 'main_gate'
         self.inBuildingPath = None
-        self.id = id
+        self.id = ID
 
         # ROS publisher and subscriber
         self.pub_bi = rospy.Publisher(
@@ -25,7 +30,7 @@ class CI_Agent(Agent):
         self.sub_visitor = rospy.Subscriber(
             'visitor_info', String, self.receive_visitor_info)
 
-    def acceptVisitor(self, host, host_location, visitor_id) -> bool:
+    def acceptVisitor(self, host: str, host_location: str, visitor_id: str) -> bool:
         # Safety Check return false if there is already a visitor
         if self.visitor is not None:
             return False
@@ -56,7 +61,7 @@ class CI_Agent(Agent):
 
         rospy.loginfo("Waiting for BI response...")
 
-    def handle_bi_response(self, msg):
+    def handle_bi_response(self, msg: str):
         # Handle BI response (either path or denial)
         rospy.loginfo(f"Received message from BI: {msg.data}")
         response = msg.data.split(':')
@@ -76,10 +81,10 @@ class CI_Agent(Agent):
 
         self.goBack()
 
-    def waitForBI(self, wait_time):
+    def waitForBI(self, wait_time: float):
         # Wait for BI agent to give access
         rospy.loginfo(f"Waiting for {wait_time} seconds as per BI instruction")
-        time.sleep(int(wait_time))
+        time.sleep(wait_time)
         self.talkWithBI()
 
     def travelToHost(self):
@@ -94,12 +99,12 @@ class CI_Agent(Agent):
         self.inBuildingPath = None
         self.host = None
 
-        rospy.loginfo("Traveling back to main gate...")
+        rospy.loginfo('Traveling back to main gate...')
         self.location = 'main_gate'
         self.visitor = None
         self.destination = None
 
-    def receive_visitor_info(self, msg):
+    def receive_visitor_info(self, msg: str):
         # Receive visitor info from the visitor node
         visitor_data = msg.data.split(',')
         host = visitor_data[0]
@@ -110,7 +115,7 @@ class CI_Agent(Agent):
         if self.acceptVisitor(host, host_location, visitor_id):
             self.travelToBuildingLocation()
         else:
-            rospy.loginfo("CI Agent already occupied")
+            rospy.loginfo('CI Agent already occupied')
 
     def run(self):
         # ROS initialization and subscription management
