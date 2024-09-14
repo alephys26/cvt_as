@@ -12,7 +12,7 @@ class BI_Agent(Agent):
         self.map = map
         self.residentList = residentList
         self.auth = authorisation
-        self.id = ID
+        self.Id = ID
         self.meet = {}
         for resident in residentList:
             self.meet[resident] = None
@@ -54,14 +54,14 @@ class BI_Agent(Agent):
             return "DNE", None
 
     def isOOS(self) -> bool:
-        return self.isHostFree(self.id)
+        return self.isHostFree(self.Id)
 
     def OOSHandler(self) -> tuple[str, None]:
-        remaining_oos_time = self.meet[self.id] + \
+        remaining_oos_time = self.meet[self.Id] + \
             self.travel_time - time.time()
         return f"OOS for {remaining_oos_time}", None
 
-    def run(self) -> tuple[str, list[tuple[float, float, float]]]:
+    def run(self, host: str, visitor: str) -> tuple[str, list[tuple[float, float, float]]]:
         if self.isOOS():
             self.OOSHandler()
-        return self.tellPath(self.host, self.visitor)
+        return self.tellPath(host, visitor)

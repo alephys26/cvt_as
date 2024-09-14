@@ -1,0 +1,7 @@
+String visitorId
+String hostId
+String ciId
+---
+String action
+int32 time
+geometry_msgs/Point[] points
