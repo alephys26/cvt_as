@@ -10,17 +10,16 @@ class CINode(Node):
     def __init__(self):
         super().__init__('ci_agent_node')
         self.agent = CI_Agent()
-        
+
         # ROS Service Servers
-        self.visitor_server = self.create_service(Visitor, 'visitor_service', self.handle_visitor_request)
+        self.visitor_server = self.create_service(
+            Visitor, 'visitor_service', self.handle_visitor_request)
         self.ci_bi_client = self.create_client(CIrequest, 'ci_bi_service')
 
-        while not self.ci_bi_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('Waiting for CI-BI service to become available...')
-        
         self.visitor_info = None
+        self.timer = None
 
-    def handle_visitor_request(self, request, response):
+    def handle_visitor_request(self, request, response) -> str:
         """
         Handles requests from the visitor and initiates the CI agent process.
         """
@@ -28,33 +27,38 @@ class CINode(Node):
         host_id = request.hostid
         host_location = request.hostlocation
 
-        self.get_logger().info(f'Received visitor request: {visitor_id}, Host: {host_id}')
+        self.get_logger().info(
+            f'Received visitor request: {visitor_id}, Host: {host_id}')
         self.visitor_info = {
             'visitor_id': visitor_id,
             'host': host_id,
             'host_location': host_location
         }
 
-        if self.agent.acceptVisitor(host_id, host_location, visitor_id):
-            self.get_logger().info(f'CI Agent accepted visitor: {visitor_id}')
-            self.travel_to_building_location()
-            response.available = 'YES'
-        else:
-            self.get_logger().info(f'CI Agent is occupied, cannot accept visitor: {visitor_id}')
-            response.available = 'NO'
-        
+        response = self.agent.run_visitor(host=host_id,
+                                          host_location=host_location,
+                                          visitor_id=visitor_id)
+
         return response
 
     def travel_to_building_location(self):
         """
         Calls the CI agent's method to travel to the building and requests BI for navigation.
         """
-        result = self.agent.travelToBuildingLocation()
-        self.get_logger().info('CI Agent traveling to building location...')
+        result = self.agent.run_visitor_to_building()
         if result:
-            self.request_bi_service(self.visitor_info['visitor_id'], self.visitor_info['host'], self.visitor_info['host_location'])
+            self.get_logger().info('CI Agent traveling to building location...')
+            self.request_bi_service(
+                self.visitor_info['visitor_id'], self.visitor_info['host'], self.visitor_info['host_location'])
+        else:
+            self.get_logger().info('Building Location path does not exist')
 
     def request_bi_service(self, visitor_id: str, host_id: str, ciid: str) -> None:
+        self.timer = self.create_timer(1.0, self.send_request_bi(
+            self.visitor_info['visitor_id'], self.visitor_info['host'], self.visitor_info['host_location']
+        ))
+
+    def send_request_bi(self, visitor_id: str, host_id: str, ciid: str) -> None:
         """
         Requests building navigation details from the BI agent.
         """
@@ -72,12 +76,16 @@ class CINode(Node):
         """
         try:
             response = future.result()
-            self.get_logger().info(f'BI agent responded with action: {response.action}')
-            if response.action == 'GO':
-                self.agent.talkWithBi(instruction=response.action,path=response.points)
-            elif response.action == 'WAIT':
-                self.get_logger().info(f'BI agent is out of service, waiting for {response.time} seconds.')
-                self.agent.talkWithBi(instruction=response.action)
-        
+            self.get_logger().info(
+                f'BI agent responded with action: {response.action}')
+            if response.action == "WAIT":
+                self.get_logger().info(
+                    f'Waiting counter is {self.agent.counter} exiting when counter = 26')
+            else:
+                self.timer.cancel()
+                self.agent.run_ci_bi_communication(
+                    response.action, response.points())
+
         except Exception as e:
-            self.get_logger().error(f'Failed to get response from BI agent: {e}')
+            self.get_logger().error(
+                f'Failed to get response from BI agent: {e}')
