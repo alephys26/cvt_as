@@ -1,37 +1,27 @@
 from crewai import Agent
+from typing import Optional, Dict
 import time
-import rospy
-from std_msgs.msg import String
-
 
 class CI_Agent(Agent):
-    def __init__(self, ID: str, map):
+    def __init__(self,map, ID:str):
         super().__init__(
-            role='Campus Incharge',
-            goal='To facilitate visitors to meet their intended host inside the campus from main gate to host location.',
-            memory=True,
-            verbose=True
+                role='Campus Incharge',
+                goal="To facilitate visitors to meet their intended host inside the campus from main gate to host's location.",
+                memory=True,
+                verbose=True
         )
-
         self.visitor = None
-        self.host = None
+        self.host= None
         self.destination = None
-        self.location = 'main_gate'
+        self.path= None
+        self.location= None
         self.inBuildingPath = None
-        self.id = ID
+        self.Id = ID
 
-        # ROS publisher and subscriber
-        self.pub_bi = rospy.Publisher(
-            'ci_to_bi_request', String, queue_size=10)
-
-        self.sub_bi = rospy.Subscriber(
-            'bi_to_ci_response', String, self.handle_bi_response)
-
-        self.sub_visitor = rospy.Subscriber(
-            'visitor_info', String, self.receive_visitor_info)
-
-    def acceptVisitor(self, host: str, host_location: str, visitor_id: str) -> bool:
-        # Safety Check return false if there is already a visitor
+    def acceptVisitor(self, host: str, host_location: str, visitor_id: int) -> bool:
+        """
+        Accepts the visitor if no visitor is currently being escorted.
+        """
         if self.visitor is not None:
             return False
 
@@ -41,85 +31,64 @@ class CI_Agent(Agent):
         self.destination = host_location
         return True
 
-    def travelToBuildingLocation(self):
+    def travelToBuildingLocation(self) -> Optional[bool]:
         """
-        For Agent to travel to the building destination
+        Moves the CI agent to the destination building. Shortest_distance_table 
+        is pre-computed using Djikstra's algorithm.
         """
+        if not self.path or not self.destination:
+            return None
 
-        rospy.loginfo(f"CI Agent {self.id} traveling to {self.destination}")
+        # Updating Agent Location
+        path, distance = self.path[self.destination]
 
-        # Simulate path traversal
-        time.sleep(5)  # Simulating travel time
+        # Path Traversal Logic (handled in node)
         self.location = self.destination
-        self.talkWithBI()
+        return self.talkWithBI()
 
-    def talkWithBI(self):
-        # ROS communication to BI agent for building navigation
-        message = f'CI Agent {self.id} requesting path for visitor {self.visitor} to meet host {self.host}'
-        rospy.loginfo(f"Sending message to BI: {message}")
-        self.pub_bi.publish(message)
+    def talkWithBI(self,instruction,path={}) -> Optional[bool]:
+        """
+        Simulates communication with the BI agent to retrieve building navigation details.
+        """
 
-        rospy.loginfo("Waiting for BI response...")
+        if instruction == 'WAIT':
+            counter = 0
+            while instruction == 'WAIT' and counter < 25:
+                counter += 1
+                time.sleep(1)
+                # ROS communication handled in node
 
-    def handle_bi_response(self, msg: str):
-        # Handle BI response (either path or denial)
-        rospy.loginfo(f"Received message from BI: {msg.data}")
-        response = msg.data.split(':')
-
-        if response[0] == 'WAIT':
-            self.waitForBI(response[1])
-
-        elif response[0] == 'GO':
-            self.inBuildingPath = response[1]
+        if instruction == 'GO':
+            self.inBuildingPath = path
             self.travelToHost()
 
-        elif response[0] == 'DNE':
-            rospy.loginfo(f"Access denied for visitor {self.visitor}")
+        return self.goBack()
 
-        elif response[0] == 'UNAUTHORIZED':
-            rospy.loginfo(f"Visitor unauthorized {self.visitor}")
+    def travelToHost(self) -> None:
+        """
+        Guides the visitor to the host's location inside the building.
+        """
+        # Path Traversal Logic (handled in node)
+        time.sleep(3)
 
-        self.goBack()
-
-    def waitForBI(self, wait_time: float):
-        # Wait for BI agent to give access
-        rospy.loginfo(f"Waiting for {wait_time} seconds as per BI instruction")
-        time.sleep(wait_time)
-        self.talkWithBI()
-
-    def travelToHost(self):
-        # Simulate path traversal to the host location inside the building
-        rospy.loginfo(
-            f"Traveling inside building to host {self.host} with path {self.inBuildingPath}")
-        time.sleep(5)  # Simulated delay for talking to host
-        self.goBack()
-
-    def goBack(self):
-        # Clear the memory of agent and return to main gate
+    def goBack(self) -> None:
+        """
+        Guides the CI agent back to the campus gate and clears the agent's memory.
+        """
         self.inBuildingPath = None
         self.host = None
 
-        rospy.loginfo('Traveling back to main gate...')
+        time.sleep(1)
         self.location = 'main_gate'
         self.visitor = None
         self.destination = None
 
-    def receive_visitor_info(self, msg: str):
-        # Receive visitor info from the visitor node
-        visitor_data = msg.data.split(',')
-        host = visitor_data[0]
-        host_location = visitor_data[1]
-        visitor_id = visitor_data[2]
-
-        rospy.loginfo(f"Received visitor info: {msg.data}")
-        if self.acceptVisitor(host, host_location, visitor_id):
-            self.travelToBuildingLocation()
-        else:
-            rospy.loginfo('CI Agent already occupied')
-
-    def run(self):
-        # ROS initialization and subscription management
-        rospy.loginfo(f"CI Agent {self.id} starting up...")
-
-        # ROS spin to keep the agent alive and listening
-        rospy.spin()
+    # def run(self, host: str, visitor_id: int, host_location: str) -> str:
+    #     """
+    #     Receives visitor information and handles the process of escorting the visitor.
+    #     """
+    #     if self.acceptVisitor(host, host_location, visitor_id):
+    #         if self.travelToBuildingLocation():
+    #             return 'YES'
+    #     else:
+    #         return 'NO'

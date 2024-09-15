@@ -1,0 +1,5 @@
+string visitorid
+string hostid
+string hostlocation
+---
+string available
