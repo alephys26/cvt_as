@@ -2,4 +2,5 @@ string visitorid
 string hostid
 string hostlocation
 ---
-string available
+int32 speed
+geometry_msgs/Point[] points
