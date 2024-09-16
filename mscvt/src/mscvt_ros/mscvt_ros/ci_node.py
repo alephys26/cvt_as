@@ -7,9 +7,9 @@ from typing import Optional, List
 
 
 class CINode(Node):
-    def __init__(self):
+    def __init__(self, ID:str , map):
         super().__init__('ci_agent_node')
-        self.agent = CI_Agent()
+        self.agent = CI_Agent(map=map, ID=ID)
 
         # ROS Service Servers
         self.visitor_server = self.create_service(
@@ -18,6 +18,7 @@ class CINode(Node):
 
         self.visitor_info = None
         self.timer = None
+        self.Id=ID
 
     def handle_visitor_request(self, request, response) -> str:
         """
@@ -35,7 +36,7 @@ class CINode(Node):
             'host_location': host_location
         }
 
-        response = self.agent.run_visitor(host=host_id,
+        response.available = self.agent.run_visitor(host=host_id,
                                           host_location=host_location,
                                           visitor_id=visitor_id)
 
@@ -55,7 +56,7 @@ class CINode(Node):
 
     def request_bi_service(self, visitor_id: str, host_id: str, ciid: str) -> None:
         self.timer = self.create_timer(1.0, self.send_request_bi(
-            self.visitor_info['visitor_id'], self.visitor_info['host'], self.visitor_info['host_location']
+            visitor_id, host_id, self.Id
         ))
 
     def send_request_bi(self, visitor_id: str, host_id: str, ciid: str) -> None:
