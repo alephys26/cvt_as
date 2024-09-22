@@ -57,7 +57,7 @@ class BI_Agent(Agent):
     def isOOS(self) -> bool:
         return self.isHostFree(self.Id)
 
-    def OOSHandler(self) -> tuple[str, None]:
+    def OOSHandler(self) -> tuple[str, int, list[None]]:
         remaining_oos_time = self.meet[self.Id] - time.time()
         return f"OOS", remaining_oos_time, []
 

@@ -14,7 +14,7 @@ class Visitor_Node(Node):
         self.agent = vi(host, host_location, ID)
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
-        self.setUpMarker()
+        self.setUpMarker(ID)
         self.setClient(host=host, host_location=host_location, ID=ID)
         self.pub = self.create_publisher(findCI, 'need_ci', 1)
         self.timer = self.create_timer(1.0, self.searchForCI)
@@ -59,8 +59,11 @@ class Visitor_Node(Node):
         self.travelCount += 1
         if self.travelCount == 1:
             self.request.hostlocation = 'INSIDE'
-        else:
+        elif self.travelCount == 2:
             self.request.hostlocation = 'MAIN GATE'
+        else:
+            self.marker.action = Marker.DELETE
+            del self
         self.talkWithCI()
 
     def publish(self):
@@ -72,11 +75,11 @@ class Visitor_Node(Node):
         self.marker.pose.position = p
         self.marker_publisher.publish(self.marker)
 
-    def setUpMarker(self):
+    def setUpMarker(self, ID: str):
         self.marker = Marker()
-        self.marker.header.frame_id = "map"
-        self.marker.ns = "visitor"
-        self.marker.id = 0
+        self.marker.header.frame_id = 'map'
+        self.marker.ns = 'visitor'
+        self.marker.id = ID
         self.marker.type = Marker.SPHERE
         self.marker.action = Marker.ADD
         self.marker.pose.orientation.w = 1.0
@@ -86,7 +89,7 @@ class Visitor_Node(Node):
         self.marker.color.r = 1.0
         self.marker.color.g = 0.0
         self.marker.color.b = 0.0
-        self.marker.color.a = 1.0
+        self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
             Marker, 'agent_location_marker', 10)
         self.publish()
