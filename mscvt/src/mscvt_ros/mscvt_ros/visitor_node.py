@@ -5,6 +5,7 @@ from mscvt_messages.msg import findCI
 from time import sleep
 import numpy as np
 from visualization_msgs.msg import Marker
+from geometry_msgs.msg import Point
 
 
 class Visitor_Node(Node):
@@ -64,7 +65,11 @@ class Visitor_Node(Node):
 
     def publish(self):
         self.marker.header.stamp = self.get_clock().now().to_msg()
-        self.marker.pose.position = self.coordinates
+        p = Point()
+        p.x = self.coordinates[0]
+        p.y = self.coordinates[1]
+        p.z = self.coordinates[2]
+        self.marker.pose.position = p
         self.marker_publisher.publish(self.marker)
 
     def setUpMarker(self):
