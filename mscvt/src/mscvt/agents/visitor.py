@@ -1,18 +1,13 @@
 from crewai import Agent
-import time
 
 
 class Visitor(Agent):
-    def __init__(self):
+    def __init__(self, host: str, host_location: str, ID: str):
+        super().__init__(role='Visitor',
+                         goal="Meet host at the host's location using CI's and BI's help.",
+                         memory=True,
+                         verbose=True)
         self.ci = None
-        self.findCI()
-
-    def findCI(self):
-        if self.ci is not None:
-            return
-        # TODO: communicate using ROS to get resultant below boolean by broadcasting movement request
-        freeCI = True
-        if freeCI:
-            # stop broadcasting movement request
-            self.ci = True
-        return
+        self.Id = ID
+        self.host = host
+        self.destination = host_location
