@@ -17,6 +17,7 @@ class Visitor_Node(Node):
         self.setUpMarker(ID)
         self.setClient(host=host, host_location=host_location, ID=ID)
         self.pub = self.create_publisher(findCI, 'need_ci', 1)
+
         self.timer = self.create_timer(1.0, self.searchForCI)
         self.subs = self.create_subscription(
             findCI, 'ci_reply', self.isCIAvailable, 10)
@@ -31,7 +32,7 @@ class Visitor_Node(Node):
         self.pub.publish(msg)
 
     def isCIAvailable(self, msg):
-        if (self.agent.ci is not None) and (msg.desc == 'YES'):
+        if (self.agent.ci is not None) and (msg.desc == self.agent.Id):
             self.agent.ci = msg.id
             self.talkWithCI()
 
@@ -41,6 +42,10 @@ class Visitor_Node(Node):
             result = future.result()
             self.speed = result.speed
             self.path = result.points
+            msg = findCI()
+            msg.id = self.agent.Id
+            msg.desc = 'GO'
+            self.pub_private.publish(msg)
             self.travel()
 
     def travel(self):
@@ -59,12 +64,17 @@ class Visitor_Node(Node):
         self.travelCount += 1
         if self.travelCount == 1:
             self.request.hostlocation = 'INSIDE'
+            self.talkWithCI()
         elif self.travelCount == 2:
+            self.path = self.path[::-1]
+            self.travel()
+        elif self.travelCount == 3:
             self.request.hostlocation = 'MAIN GATE'
+            self.talkWithCI()
         else:
             self.marker.action = Marker.DELETE
+            del self.agent
             del self
-        self.talkWithCI()
 
     def publish(self):
         self.marker.header.stamp = self.get_clock().now().to_msg()
@@ -91,12 +101,15 @@ class Visitor_Node(Node):
         self.marker.color.b = 0.0
         self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
-            Marker, 'agent_location_marker', 10)
+            Marker, f'visitor_location_marker_{self.agent.Id}', 10)
         self.publish()
 
     def setClient(self, ID: str, host: str, host_location: str):
-        self.client = self.create_client(Visitor, 'ci_communication')
+        self.client = self.create_client(
+            Visitor, f'visitor_service_{self.agent.ci}')
         self.request = Visitor.Request()
         self.request.visitorid = ID
         self.request.hostid = host
         self.request.hostlocation = host_location
+        self.pub_private = self.create_publisher(
+            findCI, f'private_{self.agent.ci}_{self.agent.Id}', 10)

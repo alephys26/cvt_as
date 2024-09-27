@@ -42,5 +42,5 @@ class BIAgentNode(Node):
         self.marker.color.b = 0.0
         self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
-            Marker, 'agent_location_marker', 10)
+            Marker, f'bi_location_marker_{self.agent.Id}', 10)
         self.publish()
