@@ -1,11 +1,12 @@
-# from xyz_map import xyz
+# # from xyz_map import xyz
 # class Building:
-#     def __init__(self, name:str):
+#     def __init__(self, name: str):
 #         self.name = name
 #         self.setMyDetails()
 
 #     def setMyDetails(self):
 #         match self.name:
+#             # EVERYTHING IS JUST AN EXAMPLE, FILL AS PER YOUR WORK
 #             case 'G5':
 #                 self.residentList = {
 #                     'B21CS079': 1,
@@ -18,7 +19,9 @@
 #                 }
 #                 self.map = None  # xyz
 #                 self.BI_Id = 'B21AI021'
+#                 self.coordinates = (1.0, 2.0, 3.0)
 #         # SIMILARLY ALL THE BUILDINGS WILL BE FILLED HERE
+
 from building_creation import building_creation 
 import networkx as nx
 import matplotlib.pyplot as plt
