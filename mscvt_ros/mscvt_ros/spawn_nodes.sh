@@ -19,7 +19,6 @@ cat <<EOT >>''main.py''
 import heapq
 import rclpy
 import random
-from mscvt.agents.visitor_params import VisitorParams
 from mscvt.maps.coordinates import locations
 from bi_node import BIAgentNode
 from ci_node import CINode
@@ -57,16 +56,31 @@ def find_min_paths(adjacency_list, locations):
     return result
 
 
+def get_visitors(campus_map, n_visitors):
+    visitors_auth = {}
+    for building in campus_map.building:
+        visitors_auth['id'] += building.visitors['id']
+        visitors_auth['host'] += building.visitors['host']
+        visitors_auth['host_location'] += building.visitors['host_location']
+
+    n_visitors = min(n_visitors, len(visitors_auth['host']))
+    indices = random.sample(range(len(visitors_auth['host'])), n_visitors)
+
+    return indices, visitors_auth
+
+
 def main():
     campus_map = CampusMap()
     min_paths = find_min_paths(campus_map.get_adjacency_list(), locations)
 
     modes = ['car', 'bike', 'walk']
+    indices, visitors = get_visitors(campus_map, $v)
+
 
 EOT
 
 for i in $(seq 1 $v); do
-    echo -e "\tvisitor_node_$i = Visitor_Node(\n\t\tID='V$i', host=VisitorParams['host'][$((i - 1))], host_location=VisitorParams['host_location'][$((i - 1))])" >>'main.py'
+    echo -e "\tvisitor_node_$i = Visitor_Node(\n\t\tID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]])" >>'main.py'
 done
 echo >> 'main.py'
 for i in $(seq 1 32); do
