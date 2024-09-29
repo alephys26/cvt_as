@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 
 class Building:
-    def __init__(self, building_name, building_type):
+    def __init__(self, building_name, building_type,c_x,c_y):
         self.building_name = building_name
         self.building_type = building_type
         self.graph = BuildingCreation(
-            building_type, building_name)  # Correct instantiation
+            building_type, building_name,c_x,c_y)  # Correct instantiation
         self.residents = []
         self.auth_meetings = {}
         self.building_structure()
