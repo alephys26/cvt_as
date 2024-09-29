@@ -1,11 +1,11 @@
 scale_factor = 1.0
 
 locations = {
-    # Main Gate and Offices
-    'Main Gate': (0 / scale_factor, 0 / scale_factor, 0),
+    # Main_Gate and Offices
+    'Main_Gate': (0 / scale_factor, 0 / scale_factor, 0),
     'Office': (8 / scale_factor, 6 / scale_factor, 0),
     'Library': (11 / scale_factor, 10 / scale_factor, 0),
-    'Data Center': (11 / scale_factor, 11 / scale_factor, 0),
+    'Data_Center': (11 / scale_factor, 11 / scale_factor, 0),
     'LHC': (15 / scale_factor, 11 / scale_factor, 0),
     'CSE': (15 / scale_factor, 12 / scale_factor, 0),
     'BLB': (16 / scale_factor, 12 / scale_factor, 0),
@@ -26,38 +26,38 @@ locations = {
     'G5': (-1 / scale_factor, 14 / scale_factor, 0),
     'G6': (-1 / scale_factor, 13 / scale_factor, 0),
 
-    # Blocks and Old Mess
+    # Blocks and Old_Mess
     'B1': (-14 / scale_factor, 0 / scale_factor, 0),
     'B2': (-15 / scale_factor, 0 / scale_factor, 0),
     'B3': (-15 / scale_factor, 0 / scale_factor, 0),
     'B4': (-14 / scale_factor, 1 / scale_factor, 0),
     'B5': (-15 / scale_factor, 1 / scale_factor, 0),
     'B6': (-16 / scale_factor, 1 / scale_factor, 0),
-    'Old Mess': (-7.5 / scale_factor, 7 / scale_factor, 0),
+    'Old_Mess': (-7.5 / scale_factor, 7 / scale_factor, 0),
 
     # Isolated Areas
     'I2': (-3 / scale_factor, -4 / scale_factor, 0),
     'I3': (-3 / scale_factor, -3 / scale_factor, 0),
-    'Director House': (0 / scale_factor, -10 / scale_factor, 0),
-    'Faculty Quarters': (0 / scale_factor, -11 / scale_factor, 0)
+    'Director_House': (0 / scale_factor, -10 / scale_factor, 0),
+    'Faculty_Quarters': (0 / scale_factor, -11 / scale_factor, 0)
 }
 
 # Edges (pairs of connected nodes)
 edges = [
-    ('Main Gate', 'Office'),
-    ('Main Gate', 'I2'),
-    ('Main Gate', 'B1'),
-    ('Main Gate', 'B3'),
-    ('Main Gate', 'B5'),
-    ('Main Gate', 'G4'),
-    ('Main Gate', 'G3'),
-    ('Main Gate', 'G1'),
-    ('Main Gate', 'G6'),
-    ('Main Gate', 'Director House'),
-    ('Main Gate', 'Faculty Quarters'),
+    ('Main_Gate', 'Office'),
+    ('Main_Gate', 'I2'),
+    ('Main_Gate', 'B1'),
+    ('Main_Gate', 'B3'),
+    ('Main_Gate', 'B5'),
+    ('Main_Gate', 'G4'),
+    ('Main_Gate', 'G3'),
+    ('Main_Gate', 'G1'),
+    ('Main_Gate', 'G6'),
+    ('Main_Gate', 'Director_House'),
+    ('Main_Gate', 'Faculty_Quarters'),
     ('Office', 'Library'),
-    ('Library', 'Data Center'),
-    ('Data Center', 'LHC'),
+    ('Library', 'Data_Center'),
+    ('Data_Center', 'LHC'),
     ('LHC', 'BLB'),
     ('BLB', 'Chemical'),
     ('CSE', 'BIO'),
@@ -70,7 +70,7 @@ edges = [
     ('I2', 'I3'),
     ('B1', 'B2'),
     ('B2', 'B3'),
-    ('B3', 'Old Mess'),
+    ('B3', 'Old_Mess'),
     ('B4', 'B5'),
     ('G1', 'G2'),
     ('G2', 'G3'),

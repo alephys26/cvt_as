@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from mscvt_messages.srv import Visitor, CIrequest
 from geometry_msgs.msg import Point
-from ci_agent import CI_Agent
+from mscvt_ros.ci_agent import CI_Agent
 from mscvt_messages.msg import Findci
 from visualization_msgs.msg import Marker
 from time import sleep
@@ -11,7 +11,7 @@ import numpy as np
 
 class CINode(Node):
     def __init__(self, ID: str, map, mode: str):
-        super().__init__('ci_agent_node')
+        super().__init__(ID)
         self.agent = CI_Agent(map=map, ID=ID, mode=mode)
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
@@ -52,7 +52,7 @@ class CINode(Node):
         response.speed, response.points = self.agent.run_visitor(host=request.hostid,
                                                                  host_location=request.hostlocation,
                                                                  visitor_id=request.visitorid)
-        if (request.hostlocation != 'MAIN GATE'):
+        if (request.hostlocation != 'Main_Gate'):
             self.sub_private = self.create_subscription(
                 Findci, f'private_{self.agent.Id}_{self.agent.visitor}', self.solve, 10)
         return response
@@ -81,7 +81,7 @@ class CINode(Node):
             self.agent.path = self.agent.path[::-1]
             self.travel()
         elif self.travelCount == 3:
-            self.agent.destination = 'MAIN GATE'
+            self.agent.destination = 'Main_Gate'
             self.agent.path = self.agent.map[self.agent.destination][1]
             self.travel()
         else:
@@ -115,7 +115,7 @@ class CINode(Node):
             self.travel()
 
         self.travelCount = 3
-        self.agent.destination = 'MAIN GATE'
+        self.agent.destination = 'Main_Gate'
         self.agent.path = self.agent.map[self.agent.destination][1]
         self.travel()
 
@@ -132,7 +132,7 @@ class CINode(Node):
         self.marker = Marker()
         self.marker.header.frame_id = "map"
         self.marker.ns = "ci"
-        self.marker.id = 0
+        self.marker.id = int(self.Id[4:])
         self.marker.type = Marker.CYLINDER
         self.marker.action = Marker.ADD
         self.marker.pose.orientation.w = 1.0

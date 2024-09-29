@@ -25,17 +25,16 @@ terminal=$(echo $TERM)
 if [[ "$terminal" == "xterm-256color" ]]; then
     sudo apt install xterm
 
-    # Terminal for ROS Nodes
-    xterm -e bash -c "
+    # Terminal for ROS Nodes with a larger size and font size
+    xterm -geometry 100x100 -fa 'Monospace' -fs 12 -e bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     cd mscvt_ros/mscvt_ros
-    python3 main.py
-    exec bash
+    ros2 run mscvt_ros system
     "
 
-    # Terminal for RViz
-    xterm -e bash -c "
+    # Terminal for RViz with a larger size and font size
+    xterm -geometry 100x100 -fa 'Monospace' -fs 12 -e bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     ros2 run rviz2 rviz2
@@ -44,20 +43,20 @@ if [[ "$terminal" == "xterm-256color" ]]; then
 else
     sudo apt install gnome-terminal
 
-    # Terminal for ROS Nodes
-    gnome-terminal -- bash -c "
+    # Terminal for ROS Nodes with a larger size and font size
+    gnome-terminal --geometry=100x100 -- bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     cd mscvt_ros/mscvt_ros
     ros2 run mscvt_ros system
     exec bash
-    "
+    " --window-with-profile=Default
 
-    # Terminal for RViz
-    gnome-terminal -- bash -c "
+    # Terminal for RViz with a larger size and font size
+    gnome-terminal --geometry=150x150 -- bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     ros2 run rviz2 rviz2
     exec bash
-    "
+    " --window-with-profile=Default
 fi

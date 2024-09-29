@@ -1,5 +1,5 @@
-from bi_agent import BI_Agent as bia
-from building import Building
+from mscvt_ros.bi_agent import BI_Agent as bia
+from mscvt_ros.building import Building
 import rclpy
 from rclpy.node import Node
 from mscvt_messages.srv import CIrequest
@@ -8,17 +8,16 @@ from visualization_msgs.msg import Marker
 
 class BIAgentNode(Node):
 
-    def __init__(self, building: Building):
-        super().__init__('bi_agent_node')
+    def __init__(self, building: Building, marker_id: int):
+        super().__init__(building.BI_Id)
         self.coordinates = building.coordinate
-        self.setUpMarker()
         self.agent = bia(building.get_paths(), building.residents,
                          building.auth_meetings, building.BI_Id)
+        self.setUpMarker(marker_id)
         self.srv = self.create_service(
             CIrequest, 'ci_request', self.handle_ci_request)
         self.get_logger().info(
             f"BI Agent ({building.BI_Id}) is ready and waiting for requests.")
-        self.setUpMarker(building.BI_Id)
 
     def handle_ci_request(self, request, response):
         self.get_logger().info(
@@ -44,4 +43,4 @@ class BIAgentNode(Node):
         self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
             Marker, f'bi_location_marker_{self.agent.Id}', 10)
-        self.publish()
+        self.marker_publisher.publish(self.marker)

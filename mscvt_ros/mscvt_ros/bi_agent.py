@@ -1,13 +1,13 @@
-from crewai import Agent
+# from crewai import Agent
 import time
 
-class BI_Agent(Agent):
+class BI_Agent():
     def __init__(self, path: dict[str, tuple[float, list[tuple]]], residentList: dict[str, str], authorisation: dict[str, list[str]], ID: str):
-        super().__init__(role='Building Incharge',
-                         goal='To facilitate visitors to meet their intended host inside their building of care.',
-                         backstory='A dedicated building manager, trusted to ensure visitors reach their hosts smoothly inside your building',
-                         memory=True,
-                         verbose=True)
+        # super().__init__(role='Building Incharge',
+        #                  goal='To facilitate visitors to meet their intended host inside their building of care.',
+        #                  backstory='A dedicated building manager, trusted to ensure visitors reach their hosts smoothly inside your building',
+        #                  memory=True,
+        #                  verbose=True)
         self.meeting_time = 3
         self.residentList = residentList
         self.auth = authorisation
@@ -16,7 +16,7 @@ class BI_Agent(Agent):
         for resident in residentList:
             self.meet[resident] = None
         # path is a dict[key=resident, value=tuple[distance, list[points]]]
-        self.path = self.path
+        self.path = path
         self.travel_time = None
 
     def chekHostPresence(self, host: str) -> bool:

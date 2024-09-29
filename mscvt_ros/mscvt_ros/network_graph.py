@@ -1,6 +1,7 @@
 import networkx as nx
-from building import Building
-from coordinates import locations
+from mscvt_ros.building import Building
+from mscvt_ros.coordinates import locations
+
 
 class CampusMap:
     def __init__(self):
@@ -24,18 +25,20 @@ class CampusMap:
 
     def create_campus_map(self):
 
-        main_gate = Building('Main Gate', 'gate', locations['Main Gate'])
+        main_gate = Building('Main_Gate', 'gate', locations['Main_Gate'])
         office = Building('Office', 'dept', locations['Office'])
         library = Building('Library', 'dept', locations['Library'])
-        data_center = Building('Data Center', 'dept', locations['Data Center'])
+        data_center = Building('Data_Center', 'dept', locations['Data_Center'])
         lhc = Building('LHC', 'dept', locations['LHC'])
         blb = Building('BLB', 'dept', locations['BLB'])
         cse_dept = Building('CSE', 'dept', locations['CSE'])
         bio_dept = Building('BIO', 'dept', locations['BIO'])
         chemical_dept = Building('Chemical', 'dept', locations['Chemical'])
-        electrical_dept = Building('Electrical', 'dept', locations['Electrical'])
+        electrical_dept = Building(
+            'Electrical', 'dept', locations['Electrical'])
         civil_dept = Building('Civil', 'dept', locations['Civil'])
-        mechanical_dept = Building('Mechanical', 'dept', locations['Mechanical'])
+        mechanical_dept = Building(
+            'Mechanical', 'dept', locations['Mechanical'])
         physics_dept = Building('Physics', 'dept', locations['Physics'])
         sola = Building('SOLA', 'dept', locations['SOLA'])
         sme = Building('SME', 'dept', locations['SME'])
@@ -46,15 +49,17 @@ class CampusMap:
         B3 = Building('B3', 'hostel', locations['B3'])
         B4 = Building('B4', 'hostel', locations['B4'])
         B5 = Building('B5', 'hostel', locations['B5'])
-        old_mess = Building('Old Mess', 'dept', locations['Old Mess'])
+        old_mess = Building('Old_Mess', 'dept', locations['Old_Mess'])
         G1 = Building('G1', 'hostel', locations['G1'])
         G2 = Building('G2', 'hostel', locations['G2'])
         G3 = Building('G3', 'hostel', locations['G3'])
         G4 = Building('G4', 'hostel', locations['G4'])
         G5 = Building('G5', 'hostel', locations['G5'])
         G6 = Building('G6', 'hostel', locations['G6'])
-        director_house = Building('Director House', 'house', locations['Director House'])
-        faculty_quarters = Building('Faculty Quarters', 'hostel', locations['Faculty Quarters'])
+        director_house = Building(
+            'Director_House', 'house', locations['Director_House'])
+        faculty_quarters = Building(
+            'Faculty_Quarters', 'hostel', locations['Faculty_Quarters'])
 
         self.building = [
             main_gate,
@@ -89,7 +94,6 @@ class CampusMap:
             director_house,
             faculty_quarters
         ]
-
 
         self.add_location(main_gate.building_name)
         self.add_location(office.building_name)

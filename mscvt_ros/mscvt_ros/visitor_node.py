@@ -1,4 +1,4 @@
-from visitor import Visitor as vi
+from mscvt_ros.visitor import Visitor as vi
 from rclpy.node import Node
 from mscvt_messages.srv import Visitor
 from mscvt_messages.msg import Findci
@@ -10,11 +10,12 @@ from geometry_msgs.msg import Point
 
 class Visitor_Node(Node):
 
-    def __init__(self, host: str, host_location: str, ID: str):
+    def __init__(self, host: str, host_location: str, ID: str, marker_id: int):
+        super().__init__(ID)
         self.agent = vi(host, host_location, ID)
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
-        self.setUpMarker(ID)
+        self.setUpMarker(marker_id)
         self.setClient(host=host, host_location=host_location, ID=ID)
         self.pub = self.create_publisher(Findci, 'need_ci', 1)
 
@@ -23,8 +24,8 @@ class Visitor_Node(Node):
             Findci, 'ci_reply', self.isCIAvailable, 10)
 
     def searchForCI(self):
-        if self.agent.ci is not None:
-            del self.timer
+        if self.agent.ci is not '':
+            self.timer = None
             return
         msg = Findci()
         msg.id = self.agent.Id
@@ -69,7 +70,7 @@ class Visitor_Node(Node):
             self.path = self.path[::-1]
             self.travel()
         elif self.travelCount == 3:
-            self.request.hostlocation = 'MAIN GATE'
+            self.request.hostlocation = 'Main_Gate'
             self.talkWithCI()
         else:
             self.marker.action = Marker.DELETE
@@ -85,7 +86,7 @@ class Visitor_Node(Node):
         self.marker.pose.position = p
         self.marker_publisher.publish(self.marker)
 
-    def setUpMarker(self, ID: str):
+    def setUpMarker(self, ID: int):
         self.marker = Marker()
         self.marker.header.frame_id = 'map'
         self.marker.ns = 'visitor'
