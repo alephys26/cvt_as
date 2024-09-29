@@ -9,10 +9,10 @@ class BIAgentNode(Node):
 
     def __init__(self, building: Building):
         super().__init__('bi_agent_node')
-        self.coordinates = building.coordinates
+        self.coordinates = building.coordinate
         self.setUpMarker()
-        self.agent = bia(building.map, building.residentList,
-                         building.authorisation, building.BI_Id)
+        self.agent = bia(building.get_paths(), building.residents,
+                         building.auth_meetings, building.BI_Id)
         self.srv = self.create_service(
             CIrequest, 'ci_request', self.handle_ci_request)
         self.get_logger().info(

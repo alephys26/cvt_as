@@ -3,13 +3,12 @@ import time
 
 
 class BI_Agent(Agent):
-    def __init__(self, map, residentList: dict[str, int], authorisation: dict[str, list[str]], ID: str):
+    def __init__(self, path: dict[str, tuple[float, list[tuple]]], residentList: dict[str, str], authorisation: dict[str, list[str]], ID: str):
         super().__init__(role='Building Incharge',
                          goal='To facilitate visitors to meet their intended host inside their building of care.',
                          memory=True,
                          verbose=True)
         self.meeting_time = 3
-        self.map = map
         self.residentList = residentList
         self.auth = authorisation
         self.Id = ID
@@ -17,14 +16,8 @@ class BI_Agent(Agent):
         for resident in residentList:
             self.meet[resident] = None
         # path is a dict[key=resident, value=tuple[distance, list[points]]]
-        self.path = self.getPath()
-        # TODO: travel_time ###################
+        self.path = self.path
         self.travel_time = None
-
-    def getPath(self) -> dict[str, list[tuple[float, float, float]]]:
-        # Run dijkstra algorithm on self.map
-        # return a dict with resident from self.residentList as key and value as graph coordinates to move in path.
-        pass
 
     def chekHostPresence(self, host: str) -> bool:
         return host in self.residentList
