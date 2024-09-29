@@ -37,9 +37,11 @@ class BI_Agent(Agent):
         if self.checkHostPresence(host):
             if self.isVisitorAuthorized(host, visitor):
                 if self.isHostFree(host):
+                    hostPath = self.path[host]
+                    self.travel_time = hostPath[0] / 0.5
                     self.meet[host] = time.time(
                     ) + self.meeting_time + self.travel_time
-                    return "GO", 0, self.path[host]
+                    return "GO", 0, hostPath
                 else:
                     return "WAIT", self.meet[host] - time.time(), []
             else:
