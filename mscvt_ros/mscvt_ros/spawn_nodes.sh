@@ -1,16 +1,11 @@
 #!/bin/bash
-# Adds v visitor agents, b BI agents and c CI agents to main.py
-# by running ./this_script.sh v b c
+# Adds v visitor agents, BI agents and c CI agents to main.py
+# by running ./spawn_nodes.sh v c
 FILE_PATH="main.py"
 v=$1
-b=$2
-c=$3
+c=$2
 
 if [ $v -le 0 ]; then
-    echo "$v is incorrect, have some positive number of visitors."
-    exit 1
-fi
-if [ $b -le 0 ]; then
     echo "$v is incorrect, have some positive number of visitors."
     exit 1
 fi
@@ -22,6 +17,8 @@ fi
 cat <<EOT >>"$FILE_PATH"
 import heapq
 import rclpy
+import random
+from mscvt.agents.visitor_params import visitor_params
 from mscvt.maps.coordinates import locations
 from bi_node import BIAgentNode
 from ci_node import CINode
@@ -63,24 +60,27 @@ def main():
     campus_map = CampusMap()
     min_paths = find_min_paths(campus_map.get_adjacency_list(), locations)
 
+    modes = ['car', 'bike', 'walk']
+    visitor_params = 
+
 EOT
 
 for i in $(seq 1 $v); do
     echo -e "\tvisitor_node_$i = Visitor_Node()" >>"$FILE_PATH"
 done
-for i in $(seq 1 $b); do
-    echo -e "\tbi_node_$i = BIAgentNode()" >>"$FILE_PATH"
+for i in $(seq 1 32); do
+    echo -e "\tbi_node_$i = BIAgentNode(campus_map.building[$((i-1))])" >>"$FILE_PATH"
 done
 for i in $(seq 1 $c); do
-    echo -e "\tci_node_$i = CINode()" >>"$FILE_PATH"
+    echo -e "\tci_node_$i = CINode(ID='CI_$i', map=min_paths, mode=modes[random.randint(0,2)])" >>"$FILE_PATH"
 done
 
-echo -e "\texecutor = MultiThreadExecutor()\n" >>"$FILE_PATH"
+echo -e '\texecutor = MultiThreadExecutor()\n' >>"$FILE_PATH"
 
 for i in $(seq 1 $v); do
     echo -e "\texecutor.add_node(visitor_node_$i)" >>"$FILE_PATH"
 done
-for i in $(seq 1 $b); do
+for i in $(seq 1 32); do
     echo -e "\texecutor.add_node(bi_node_$i)" >>"$FILE_PATH"
 done
 for i in $(seq 1 $c); do
@@ -93,6 +93,10 @@ cat <<EOT >>"$FILE_PATH"
         executor.spin()
     except KeyboardInterrupt:
         pass
+
+    rclpy.shutdown()
+
+main()
 EOT
 
 echo "$n Agents code has been added to main.py."
