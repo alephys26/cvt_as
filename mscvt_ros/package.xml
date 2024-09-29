@@ -3,9 +3,9 @@
 <package format="3">
   <name>mscvt_ros</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="shrivastavayash26@gmail.com">yash26</maintainer>
-  <license>TODO: License declaration</license>
+  <description>A multiagent system for Campus Visitor Tour</description>
+  <maintainer email="shrivastavayash26@gmail.com">Yash Shrivastava</maintainer>
+  <license>UNKNOWN</license>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

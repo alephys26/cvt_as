@@ -1,7 +1,7 @@
 from mscvt.agents.visitor import Visitor as vi
 from rclpy.node import Node
 from mscvt_messages.srv import Visitor
-from mscvt_messages.msg import findCI
+from mscvt_messages.msg import Findci
 from time import sleep
 import numpy as np
 from visualization_msgs.msg import Marker
@@ -16,17 +16,17 @@ class Visitor_Node(Node):
         self.coordinates = (0.0, 0.0, 0.0)
         self.setUpMarker(ID)
         self.setClient(host=host, host_location=host_location, ID=ID)
-        self.pub = self.create_publisher(findCI, 'need_ci', 1)
+        self.pub = self.create_publisher(Findci, 'need_ci', 1)
 
         self.timer = self.create_timer(1.0, self.searchForCI)
         self.subs = self.create_subscription(
-            findCI, 'ci_reply', self.isCIAvailable, 10)
+            Findci, 'ci_reply', self.isCIAvailable, 10)
 
     def searchForCI(self):
         if self.agent.ci is not None:
             del self.timer
             return
-        msg = findCI()
+        msg = Findci()
         msg.id = self.agent.Id
         msg.desc = 'TAKEME'
         self.pub.publish(msg)
@@ -42,7 +42,7 @@ class Visitor_Node(Node):
             result = future.result()
             self.speed = result.speed
             self.path = result.points
-            msg = findCI()
+            msg = Findci()
             msg.id = self.agent.Id
             msg.desc = 'GO'
             self.pub_private.publish(msg)
@@ -112,4 +112,4 @@ class Visitor_Node(Node):
         self.request.hostid = host
         self.request.hostlocation = host_location
         self.pub_private = self.create_publisher(
-            findCI, f'private_{self.agent.ci}_{self.agent.Id}', 10)
+            Findci, f'private_{self.agent.ci}_{self.agent.Id}', 10)

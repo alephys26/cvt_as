@@ -4,7 +4,7 @@ from mscvt.srv import Visitor, CIrequest
 from geometry_msgs.msg import Point
 from mscvt.src.mscvt.agents.ci_agent import CI_Agent
 from typing import Optional, List
-from mscvt_messages.msg import findCI
+from mscvt_messages.msg import Findci
 from visualization_msgs.msg import Marker
 from time import sleep
 import numpy as np
@@ -17,9 +17,9 @@ class CINode(Node):
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
         self.sub = self.create_subscription(
-            findCI, 'need_ci', self.isMessage, 10)
+            Findci, 'need_ci', self.isMessage, 10)
 
-        self.pub = self.create_publisher(findCI, 'ci_reply', 1)
+        self.pub = self.create_publisher(Findci, 'ci_reply', 1)
 
         self.visitor_server = self.create_service(
             Visitor, f'visitor_service_{self.agent.Id}', self.handle_visitor_request)
@@ -37,7 +37,7 @@ class CINode(Node):
         return self.isAvailable()
 
     def isAvailable(self):
-        msg = findCI()
+        msg = Findci()
         msg.id = self.agent.Id
         msg.desc = self.agent.visitor
         self.pub.publish(msg)
@@ -55,7 +55,7 @@ class CINode(Node):
                                                                  visitor_id=request.visitorid)
         if (request.hostlocation != 'MAIN GATE'):
             self.sub_private = self.create_subscription(
-                findCI, f'private_{self.agent.Id}_{self.agent.visitor}', self.solve, 10)
+                Findci, f'private_{self.agent.Id}_{self.agent.visitor}', self.solve, 10)
         return response
 
     def solve(self, msg):
