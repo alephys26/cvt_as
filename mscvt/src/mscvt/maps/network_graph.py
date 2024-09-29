@@ -12,10 +12,6 @@ class CampusMap:
         self.graph.add_node(building_name)
 
     def add_path(self, from_location, to_location, weight=1):
-        """
-        Add a path between two locations with a specified weight.
-        Weight can represent distance, time, or any other metric.
-        """
         self.graph.add_edge(from_location, to_location, weight=weight)
 
     def visualize_map(self):
@@ -31,11 +27,6 @@ class CampusMap:
         plt.show()
 
     def get_adjacency_list(self):
-        """
-        Returns the adjacency list of the campus graph as a dictionary.
-        Each key is a node, and the corresponding value is a dictionary
-        of neighboring nodes and their edge weights.
-        """
         adjacency_list = {}
         for node in list(self.graph.nodes):
             adjacency_list[node] = {}
@@ -45,39 +36,38 @@ class CampusMap:
         return adjacency_list
 
     def create_campus_map(self):
-
-        main_gate = Building("Main Gate", "gate"),
-        office = Building("Office", "dept"),
-        library = Building("Library", "dept"),
-        data_center = Building("Data Center", "dept"),
-        lhc = Building("LHC", "dept"),
-        blb = Building("BLB", "dept"),
-        cse_dept = Building("CSE", "dept"),
-        bio_dept = Building("BIO", "dept"),
-        chemical_dept = Building("Chemical", "dept"),
-        electrical_dept = Building("Electrical", "dept"),
-        civil_dept = Building("Civil", "dept"),
-        mechanical_dept = Building("Mechanical", "dept"),
-        physics_dept = Building("Physics", "dept"),
-        sola = Building("SOLA", "dept"),
-        sme = Building("SME", "dept"),
-        material_dept = Building("Material Science", "dept"),
-        I2 = Building("I2", "hostel"),
-        I3 = Building("I3", "hostel"),
-        B1 = Building("B1", "hostel"),
-        B2 = Building("B2", "hostel"),
-        B3 = Building("B3", "hostel"),
-        B4 = Building("B4", "hostel"),
-        B5 = Building("B5", "hostel"),
-        old_mess = Building("Old Mess", "dept"),
-        G1 = Building("G1", "hostel"),
-        G2 = Building("G2", "hostel"),
-        G3 = Building("G3", "hostel"),
-        G4 = Building("G4", "hostel"),
-        G5 = Building("G5", "hostel"),
-        G6 = Building("G6", "hostel"),
-        director_house = Building("Director House", "house"),
-        faculty_quarters = Building("Faculty Quarters", "hostel"),
+        main_gate = Building("Main Gate", "gate")
+        office = Building("Office", "dept")
+        library = Building("Library", "dept")
+        data_center = Building("Data Center", "dept")
+        lhc = Building("LHC", "dept")
+        blb = Building("BLB", "dept")
+        cse_dept = Building("CSE", "dept")
+        bio_dept = Building("BIO", "dept")
+        chemical_dept = Building("Chemical", "dept")
+        electrical_dept = Building("Electrical", "dept")
+        civil_dept = Building("Civil", "dept")
+        mechanical_dept = Building("Mechanical", "dept")
+        physics_dept = Building("Physics", "dept")
+        sola = Building("SOLA", "dept")
+        sme = Building("SME", "dept")
+        material_dept = Building("Material Science", "dept")
+        I2 = Building("I2", "hostel")
+        I3 = Building("I3", "hostel")
+        B1 = Building("B1", "hostel")
+        B2 = Building("B2", "hostel")
+        B3 = Building("B3", "hostel")
+        B4 = Building("B4", "hostel")
+        B5 = Building("B5", "hostel")
+        old_mess = Building("Old Mess", "dept")
+        G1 = Building("G1", "hostel")
+        G2 = Building("G2", "hostel")
+        G3 = Building("G3", "hostel")
+        G4 = Building("G4", "hostel")
+        G5 = Building("G5", "hostel")
+        G6 = Building("G6", "hostel")
+        director_house = Building("Director House", "house")
+        faculty_quarters = Building("Faculty Quarters", "hostel")
 
         self.add_location(main_gate.building_name)
         self.add_location(office.building_name)
