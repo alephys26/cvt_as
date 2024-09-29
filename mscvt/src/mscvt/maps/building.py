@@ -7,6 +7,7 @@ class Building:
     def __init__(self, building_name, building_type,coordinate):
         self.building_name = building_name
         self.building_type = building_type
+        self.coordinate=coordinate
         self.graph = BuildingCreation(
             building_type, building_name,coordinate)  # Correct instantiation
         self.residents = []
