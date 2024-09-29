@@ -1,6 +1,6 @@
 import networkx as nx
 from building import Building
-
+from coordinates import locations
 
 class CampusMap:
     def __init__(self):
@@ -24,38 +24,38 @@ class CampusMap:
 
     def create_campus_map(self):
 
-        main_gate = Building("Main Gate", "gate")
-        office = Building("Office", "dept")
-        library = Building("Library", "dept")
-        data_center = Building("Data Center", "dept")
-        lhc = Building("LHC", "dept")
-        blb = Building("BLB", "dept")
-        cse_dept = Building("CSE", "dept")
-        bio_dept = Building("BIO", "dept")
-        chemical_dept = Building("Chemical", "dept")
-        electrical_dept = Building("Electrical", "dept")
-        civil_dept = Building("Civil", "dept")
-        mechanical_dept = Building("Mechanical", "dept")
-        physics_dept = Building("Physics", "dept")
-        sola = Building("SOLA", "dept")
-        sme = Building("SME", "dept")
-        material_dept = Building("Material Science", "dept")
-        I2 = Building("I2", "hostel")
-        I3 = Building("I3", "hostel")
-        B1 = Building("B1", "hostel")
-        B2 = Building("B2", "hostel")
-        B3 = Building("B3", "hostel")
-        B4 = Building("B4", "hostel")
-        B5 = Building("B5", "hostel")
-        old_mess = Building("Old Mess", "dept")
-        G1 = Building("G1", "hostel")
-        G2 = Building("G2", "hostel")
-        G3 = Building("G3", "hostel")
-        G4 = Building("G4", "hostel")
-        G5 = Building("G5", "hostel")
-        G6 = Building("G6", "hostel")
-        director_house = Building("Director House", "house")
-        faculty_quarters = Building("Faculty Quarters", "hostel")
+        main_gate = Building('Main Gate', 'gate', locations['Main Gate'])
+        office = Building('Office', 'dept', locations['Office'])
+        library = Building('Library', 'dept', locations['Library'])
+        data_center = Building('Data Center', 'dept', locations['Data Center'])
+        lhc = Building('LHC', 'dept', locations['LHC'])
+        blb = Building('BLB', 'dept', locations['BLB'])
+        cse_dept = Building('CSE', 'dept', locations['CSE'])
+        bio_dept = Building('BIO', 'dept', locations['BIO'])
+        chemical_dept = Building('Chemical', 'dept', locations['Chemical'])
+        electrical_dept = Building('Electrical', 'dept', locations['Electrical'])
+        civil_dept = Building('Civil', 'dept', locations['Civil'])
+        mechanical_dept = Building('Mechanical', 'dept', locations['Mechanical'])
+        physics_dept = Building('Physics', 'dept', locations['Physics'])
+        sola = Building('SOLA', 'dept', locations['SOLA'])
+        sme = Building('SME', 'dept', locations['SME'])
+        material_dept = Building('Material Science', 'dept', locations['Material Science'])
+        I2 = Building('I2', 'hostel', locations['I2'])
+        I3 = Building('I3', 'hostel', locations['I3'])
+        B1 = Building('B1', 'hostel', locations['B1'])
+        B2 = Building('B2', 'hostel', locations['B2'])
+        B3 = Building('B3', 'hostel', locations['B3'])
+        B4 = Building('B4', 'hostel', locations['B4'])
+        B5 = Building('B5', 'hostel', locations['B5'])
+        old_mess = Building('Old Mess', 'dept', locations['Old Mess'])
+        G1 = Building('G1', 'hostel', locations['G1'])
+        G2 = Building('G2', 'hostel', locations['G2'])
+        G3 = Building('G3', 'hostel', locations['G3'])
+        G4 = Building('G4', 'hostel', locations['G4'])
+        G5 = Building('G5', 'hostel', locations['G5'])
+        G6 = Building('G6', 'hostel', locations['G6'])
+        director_house = Building('Director House', 'house', locations['Director House'])
+        faculty_quarters = Building('Faculty Quarters', 'hostel', locations['Faculty Quarters'])
 
         self.building = [
             main_gate,
