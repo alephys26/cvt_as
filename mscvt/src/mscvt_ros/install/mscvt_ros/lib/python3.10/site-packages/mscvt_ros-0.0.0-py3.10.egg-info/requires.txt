@@ -1,0 +1,3 @@
+setuptools
+geometry_msgs
+visualization_msgs

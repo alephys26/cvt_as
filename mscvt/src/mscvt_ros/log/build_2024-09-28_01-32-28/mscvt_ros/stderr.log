@@ -1,0 +1,5 @@
+  File "/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros/campus_map_publisher.py", line 5
+    from ../../maps.coordinates import locations, edges
+           ^
+SyntaxError: invalid syntax
+

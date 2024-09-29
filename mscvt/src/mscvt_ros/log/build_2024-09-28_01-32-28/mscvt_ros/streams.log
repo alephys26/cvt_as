@@ -1,0 +1,35 @@
+[1.043s] Invoking command in '/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros': PYTHONPATH=/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base build/mscvt_ros build --build-base /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build install --record /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/install.log --single-version-externally-managed install_data
+[1.267s] running egg_info
+[1.281s] writing build/mscvt_ros/mscvt_ros.egg-info/PKG-INFO
+[1.283s] writing dependency_links to build/mscvt_ros/mscvt_ros.egg-info/dependency_links.txt
+[1.283s] writing entry points to build/mscvt_ros/mscvt_ros.egg-info/entry_points.txt
+[1.283s] writing requirements to build/mscvt_ros/mscvt_ros.egg-info/requires.txt
+[1.284s] writing top-level names to build/mscvt_ros/mscvt_ros.egg-info/top_level.txt
+[1.313s] reading manifest file 'build/mscvt_ros/mscvt_ros.egg-info/SOURCES.txt'
+[1.314s] writing manifest file 'build/mscvt_ros/mscvt_ros.egg-info/SOURCES.txt'
+[1.315s] running build
+[1.315s] running build_py
+[1.317s] copying mscvt_ros/campus_map_publisher.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.319s] copying mscvt_ros/bi_node.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.319s] copying mscvt_ros/__init__.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.319s] copying mscvt_ros/visitor_node.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.320s] running install
+[1.325s] running install_lib
+[1.342s] copying /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros/campus_map_publisher.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros
+[1.343s] byte-compiling /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros/campus_map_publisher.py to campus_map_publisher.cpython-310.pyc
+[1.343s]   File "/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros/campus_map_publisher.py", line 5
+[1.343s]     from ../../maps.coordinates import locations, edges
+[1.343s]            ^
+[1.343s] SyntaxError: invalid syntax
+[1.343s] 
+[1.343s] running install_data
+[1.343s] copying resource/mscvt_ros -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/ament_index/resource_index/packages
+[1.343s] copying package.xml -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/mscvt_ros
+[1.344s] copying rviz_config.rviz -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/mscvt_ros
+[1.347s] running install_egg_info
+[1.361s] removing '/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros-0.0.0-py3.10.egg-info' (and everything under it)
+[1.364s] Copying build/mscvt_ros/mscvt_ros.egg-info to /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros-0.0.0-py3.10.egg-info
+[1.365s] running install_scripts
+[1.493s] Installing campus_map_publisher script to /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/mscvt_ros
+[1.494s] writing list of installed files to '/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/install.log'
+[1.514s] Invoked command in '/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros' returned '0': PYTHONPATH=/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base build/mscvt_ros build --build-base /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build install --record /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/install.log --single-version-externally-managed install_data

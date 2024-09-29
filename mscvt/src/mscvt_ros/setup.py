@@ -21,6 +21,7 @@ setup(
     license='TODO: License declaration',
     entry_points={
         'console_scripts': [
+            'campus_map_publisher = mscvt_ros.campus_map_publisher:main',
         ],
     },
 )

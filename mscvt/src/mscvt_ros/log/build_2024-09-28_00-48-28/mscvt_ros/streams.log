@@ -1,0 +1,44 @@
+[1.206s] Invoking command in '/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros': PYTHONPATH=/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base build/mscvt_ros build --build-base /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build install --record /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/install.log --single-version-externally-managed install_data
+[1.433s] running egg_info
+[1.433s] creating build/mscvt_ros/mscvt_ros.egg-info
+[1.469s] writing build/mscvt_ros/mscvt_ros.egg-info/PKG-INFO
+[1.472s] writing dependency_links to build/mscvt_ros/mscvt_ros.egg-info/dependency_links.txt
+[1.475s] writing entry points to build/mscvt_ros/mscvt_ros.egg-info/entry_points.txt
+[1.475s] writing requirements to build/mscvt_ros/mscvt_ros.egg-info/requires.txt
+[1.476s] writing top-level names to build/mscvt_ros/mscvt_ros.egg-info/top_level.txt
+[1.476s] writing manifest file 'build/mscvt_ros/mscvt_ros.egg-info/SOURCES.txt'
+[1.522s] reading manifest file 'build/mscvt_ros/mscvt_ros.egg-info/SOURCES.txt'
+[1.524s] writing manifest file 'build/mscvt_ros/mscvt_ros.egg-info/SOURCES.txt'
+[1.524s] running build
+[1.524s] running build_py
+[1.524s] creating /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build
+[1.525s] creating /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib
+[1.525s] creating /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.526s] copying mscvt_ros/campus_map_publisher.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.526s] copying mscvt_ros/bi_node.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.527s] copying mscvt_ros/__init__.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.527s] copying mscvt_ros/visitor_node.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros
+[1.528s] running install
+[1.535s] running install_lib
+[1.549s] creating /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros
+[1.550s] copying /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros/campus_map_publisher.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros
+[1.550s] copying /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros/bi_node.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros
+[1.550s] copying /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros/__init__.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros
+[1.550s] copying /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build/lib/mscvt_ros/visitor_node.py -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros
+[1.551s] byte-compiling /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros/campus_map_publisher.py to campus_map_publisher.cpython-310.pyc
+[1.553s] byte-compiling /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros/bi_node.py to bi_node.cpython-310.pyc
+[1.553s] byte-compiling /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros/__init__.py to __init__.cpython-310.pyc
+[1.553s] byte-compiling /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros/visitor_node.py to visitor_node.cpython-310.pyc
+[1.554s] running install_data
+[1.554s] creating /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/ament_index
+[1.554s] creating /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/ament_index/resource_index
+[1.555s] creating /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/ament_index/resource_index/packages
+[1.555s] copying resource/mscvt_ros -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/ament_index/resource_index/packages
+[1.555s] copying package.xml -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/mscvt_ros
+[1.555s] copying rviz_config.rviz -> /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/share/mscvt_ros
+[1.556s] running install_egg_info
+[1.571s] Copying build/mscvt_ros/mscvt_ros.egg-info to /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages/mscvt_ros-0.0.0-py3.10.egg-info
+[1.572s] running install_scripts
+[1.701s] Installing campus_map_publisher script to /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/mscvt_ros
+[1.702s] writing list of installed files to '/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/install.log'
+[1.725s] Invoked command in '/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros' returned '0': PYTHONPATH=/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/install/mscvt_ros/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base build/mscvt_ros build --build-base /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/build install --record /home/parallels/Desktop/auto_assign1/cvt_as/mscvt/src/mscvt_ros/build/mscvt_ros/install.log --single-version-externally-managed install_data
