@@ -16,6 +16,10 @@ class Building:
         self.BI_Id = f"{self.building_name}-F1-R101"
         self.auth_meetings = {}
         self.building_structure()
+        self.visitors={}
+        self.visitors['id']=[]
+        self.visitors['host_location']=[]
+        self.visitors['host']=[]
 
     def building_structure(self):
         if self.building_type == "hostel":
@@ -59,6 +63,9 @@ class Building:
         # Create 3 authorized persons (random person IDs)
         authorized_persons = [
             f"{resident_id}_P00{i}" for i in range(1, 4)]  # P001, P002, P003
+        self.visitors['id'] += authorized_persons
+        self.visitors['host'] += [resident_id for _ in range(3)]
+        self.visitors['host_location'] += [self.building_name for _ in range(3)]
         return authorized_persons
 
     def __find_min_paths(self):
