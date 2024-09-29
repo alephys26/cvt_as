@@ -3,3 +3,4 @@ __pycache__/
 mscvt/src/build/
 mscvt/src/install/
 mscvt/src/log/
+*.ipynb
