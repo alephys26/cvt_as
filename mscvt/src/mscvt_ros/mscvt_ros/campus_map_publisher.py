@@ -2,8 +2,9 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker, MarkerArray
-from coordinates import locations, edges
-
+from mscvt.maps.coordinates import locations, edges
+import sys
+import os
 
 class CampusMapPublisher(Node):
     def __init__(self):
@@ -17,9 +18,8 @@ class CampusMapPublisher(Node):
     def publish_map(self):
         marker_array = MarkerArray()
 
-        # Add nodes (spheres) and labels
         for idx, (location, pos) in enumerate(locations.items()):
-            # Node marker
+
             marker = Marker()
             marker.header.frame_id = "map"
             marker.header.stamp = self.get_clock().now().to_msg()
@@ -40,44 +40,40 @@ class CampusMapPublisher(Node):
             marker.color.a = 0.4
             marker_array.markers.append(marker)
 
-            # Label marker (text)
             label_marker = Marker()
             label_marker.header.frame_id = "map"
             label_marker.header.stamp = self.get_clock().now().to_msg()
             label_marker.ns = "campus_map"
-            # Avoid conflict with node IDs
+
             label_marker.id = idx + len(locations)
             label_marker.type = Marker.TEXT_VIEW_FACING
             label_marker.action = Marker.ADD
             label_marker.pose.position.x = float(pos[0])
             label_marker.pose.position.y = float(pos[1])
             label_marker.pose.position.z = float(
-                pos[2]) + 0.7  # Raise the label above the node
-            label_marker.scale.z = 0.1  # Size of the text
+                pos[2]) + 0.7
+            label_marker.scale.z = 0.1
             label_marker.color.r = 1.0
             label_marker.color.g = 1.0
             label_marker.color.b = 1.0
             label_marker.color.a = 1.0
-            label_marker.text = location  # Text label
+            label_marker.text = location
             marker_array.markers.append(label_marker)
 
-        # Add edges (lines)
         for idx, (start, end) in enumerate(edges):
             line_marker = Marker()
             line_marker.header.frame_id = "map"
             line_marker.header.stamp = self.get_clock().now().to_msg()
             line_marker.ns = "campus_map"
-            # Avoid conflict with node and label IDs
             line_marker.id = idx + len(locations) * 2
             line_marker.type = Marker.LINE_STRIP
             line_marker.action = Marker.ADD
-            line_marker.scale.x = 0.025  # Thickness of the line
+            line_marker.scale.x = 0.025
             line_marker.color.r = 1.0
             line_marker.color.g = 1.0
             line_marker.color.b = 0.0
             line_marker.color.a = 1.0
 
-            # Start and end points of the edge
             start_point = Point()
             start_point.x = float(locations[start][0])
             start_point.y = float(locations[start][1])
@@ -93,7 +89,6 @@ class CampusMapPublisher(Node):
 
             marker_array.markers.append(line_marker)
 
-        # Publish the MarkerArray
         self.publisher_.publish(marker_array)
 
 

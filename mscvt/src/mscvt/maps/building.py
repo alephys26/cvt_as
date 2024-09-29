@@ -1,16 +1,17 @@
-from building_creation import BuildingCreation 
+from building_creation import BuildingCreation
 import networkx as nx
 import matplotlib.pyplot as plt
 
 
 class Building:
-    def __init__(self, building_name, building_type,coordinate):
+    def __init__(self, building_name, building_type, coordinate):
         self.building_name = building_name
         self.building_type = building_type
-        self.coordinate=coordinate
+        self.coordinate = coordinate
         self.graph = BuildingCreation(
-            building_type, building_name,coordinate)  # Correct instantiation
+            building_type, building_name, coordinate)  # Correct instantiation
         self.residents = []
+        self.BI_Id = f"{self.building_name}-F1-R101"
         self.auth_meetings = {}
         self.building_structure()
 
