@@ -7,7 +7,7 @@ class Building:
     def __init__(self, building_name, building_type):
         self.building_name = building_name
         self.building_type = building_type
-        self.bui = BuildingCreation(
+        self.graph = BuildingCreation(
             building_type, building_name)  # Correct instantiation
         self.residents = []
         self.auth_meetings = {}
@@ -54,11 +54,11 @@ class Building:
     def create_authorized_persons(self, resident_id):
         # Create 3 authorized persons (random person IDs)
         authorized_persons = [
-            f"{resident_id} -> P00{i}" for i in range(1, 4)]  # P001, P002, P003
+            f"{resident_id}_P00{i}" for i in range(1, 4)]  # P001, P002, P003
         return authorized_persons
 
     def visualize_graph(self):
-        G = self.bui.get_graph()  # Get the graph from building_creation
+        G = self.graph.get_graph()  # Get the graph from building_creation
         pos = nx.spring_layout(G)  # Positions for all nodes
         plt.figure(figsize=(8, 6))
         nx.draw(G, pos, with_labels=True, node_color='skyblue',
