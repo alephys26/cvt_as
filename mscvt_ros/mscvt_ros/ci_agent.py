@@ -5,6 +5,7 @@ class CI_Agent(Agent):
         super().__init__(
             role='Campus Incharge',
             goal="To facilitate visitors to meet their intended host inside the campus from main gate to host's location.",
+            backstory='An experienced campus guide, responsible for helping visitors navigate from the entrance to their destination.',
             memory=True,
             verbose=True
         )

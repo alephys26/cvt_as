@@ -1,11 +1,11 @@
 from crewai import Agent
 import time
 
-
 class BI_Agent(Agent):
     def __init__(self, path: dict[str, tuple[float, list[tuple]]], residentList: dict[str, str], authorisation: dict[str, list[str]], ID: str):
         super().__init__(role='Building Incharge',
                          goal='To facilitate visitors to meet their intended host inside their building of care.',
+                         backstory='A dedicated building manager, trusted to ensure visitors reach their hosts smoothly inside your building',
                          memory=True,
                          verbose=True)
         self.meeting_time = 3
