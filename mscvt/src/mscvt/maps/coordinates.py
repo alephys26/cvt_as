@@ -1,4 +1,4 @@
-scale_factor = 5
+scale_factor = 1.0
 
 locations = {
     # Main Gate and Offices
