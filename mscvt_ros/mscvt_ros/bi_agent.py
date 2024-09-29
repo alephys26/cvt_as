@@ -1,5 +1,5 @@
-# from crewai import Agent
 import time
+import rclpy.logging
 
 class BI_Agent():
     def __init__(self, path: dict[str, tuple[float, list[tuple]]], residentList: dict[str, str], authorisation: dict[str, list[str]], ID: str):
@@ -18,15 +18,16 @@ class BI_Agent():
         # path is a dict[key=resident, value=tuple[distance, list[points]]]
         self.path = path
         self.travel_time = None
+        self.logger = rclpy.logging.get_logger('BI_Agent')
 
-    def chekHostPresence(self, host: str) -> bool:
+    def checkHostPresence(self, host: str) -> bool:
         return host in self.residentList
 
     def isVisitorAuthorized(self, host: str, visitor: str) -> bool:
         return visitor in self.auth[host]
 
     def isHostFree(self, host: str) -> bool:
-        if self.meet[host] == None:
+        if self.meet[host] is None:
             return True
         if self.meet[host] <= time.time():
             self.meet[host] = None
@@ -39,14 +40,18 @@ class BI_Agent():
                 if self.isHostFree(host):
                     hostPath = self.path[host]
                     self.travel_time = hostPath[0] / 0.5
-                    self.meet[host] = time.time(
-                    ) + self.meeting_time + self.travel_time
+                    self.meet[host] = time.time() + self.meeting_time + self.travel_time
+                    self.logger.info(f'Host {host} is free. Visitor {visitor} can proceed to meet.')
                     return "GO", 0, hostPath
                 else:
-                    return "WAIT", self.meet[host] - time.time(), []
+                    remaining_time = self.meet[host] - time.time()
+                    self.logger.info(f'Host {host} is busy. Visitor {visitor} needs to wait for {remaining_time:.2f} seconds.')
+                    return "WAIT", remaining_time, []
             else:
+                self.logger.warning(f'Visitor {visitor} is unauthorized to meet host {host}.')
                 return "UNAUTHORIZED", 0, []
         else:
+            self.logger.warning(f'Host {host} does not exist.')
             return "DNE", 0, []
 
     def isOOS(self) -> bool:
@@ -54,9 +59,10 @@ class BI_Agent():
 
     def OOSHandler(self) -> tuple[str, int, list[None]]:
         remaining_oos_time = self.meet[self.Id] - time.time()
+        self.logger.info(f'BI Agent {self.Id} is out of service. Remaining time: {remaining_oos_time:.2f} seconds.')
         return f"OOS", remaining_oos_time, []
 
     def run(self, host: str, visitor: str) -> tuple[str, int, list[tuple[float, float, float]]]:
         if self.isOOS():
-            self.OOSHandler()
+            return self.OOSHandler()
         return self.tellPath(host, visitor)

@@ -18,12 +18,15 @@ class BIAgentNode(Node):
             CIrequest, 'ci_request', self.handle_ci_request)
         self.get_logger().info(
             f"BI Agent ({building.BI_Id}) is ready and waiting for requests.")
+        self.get_logger().info(f"Marker ID set to {marker_id} for BI Agent.")
 
     def handle_ci_request(self, request, response):
         self.get_logger().info(
             f"BI Agent ({self.agent.Id}) received request: [Host={request.hostid}:Visitor={request.visitorid}] from CI={request.ciid}")
         response.action, response.time, response.points = self.agent.run(
             host=request.hostid, visitor=request.visitorid)
+        self.get_logger().info(
+            f"BI Agent ({self.agent.Id}) processed request: [Action={response.action}:Time={response.time}:Points={response.points}]")
         return response
 
     def setUpMarker(self, ID):
@@ -43,4 +46,6 @@ class BIAgentNode(Node):
         self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
             Marker, f'bi_location_marker_{self.agent.Id}', 10)
+        self.get_logger().info(f"Marker set up for BI Agent ({self.agent.Id}).")
         self.marker_publisher.publish(self.marker)
+        self.get_logger().info(f"Marker published for BI Agent ({self.agent.Id}).")

@@ -6,7 +6,7 @@ from time import sleep
 import numpy as np
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
-
+import rclpy.logging
 
 class Visitor_Node(Node):
 
@@ -24,17 +24,19 @@ class Visitor_Node(Node):
             Findci, 'ci_reply', self.isCIAvailable, 10)
 
     def searchForCI(self):
-        if self.agent.ci is not '':
+        if self.agent.ci != '':
             self.timer = None
             return
         msg = Findci()
         msg.id = self.agent.Id
         msg.desc = 'TAKEME'
         self.pub.publish(msg)
+        self.get_logger().info(f'Searching for CI: {msg.id} : {msg.desc}')
 
     def isCIAvailable(self, msg):
-        if (self.agent.ci is not None) and (msg.desc == self.agent.Id):
+        if (self.agent.ci !='') and (msg.desc == self.agent.Id):
             self.agent.ci = msg.id
+            self.get_logger().info(f'CI available: {msg.id}')
             self.talkWithCI()
 
     def talkWithCI(self):
@@ -47,6 +49,7 @@ class Visitor_Node(Node):
             msg.id = self.agent.Id
             msg.desc = 'GO'
             self.pub_private.publish(msg)
+            self.get_logger().info(f'Talking with CI, sending message: {msg.id} : {msg.desc}')
             self.travel()
 
     def travel(self):
@@ -65,15 +68,19 @@ class Visitor_Node(Node):
         self.travelCount += 1
         if self.travelCount == 1:
             self.request.hostlocation = 'INSIDE'
+            self.get_logger().info('Travel Count 1: Requesting CI inside')
             self.talkWithCI()
         elif self.travelCount == 2:
             self.path = self.path[::-1]
+            self.get_logger().info('Travel Count 2: Reversing path')
             self.travel()
         elif self.travelCount == 3:
             self.request.hostlocation = 'Main_Gate'
+            self.get_logger().info('Travel Count 3: Requesting CI at Main Gate')
             self.talkWithCI()
         else:
             self.marker.action = Marker.DELETE
+            self.get_logger().info('Travel complete: Deleting marker and cleaning up')
             del self.agent
             del self
 
@@ -85,6 +92,7 @@ class Visitor_Node(Node):
         p.z = self.coordinates[2]
         self.marker.pose.position = p
         self.marker_publisher.publish(self.marker)
+        self.get_logger().info(f'Publishing marker at coordinates: {self.coordinates}')
 
     def setUpMarker(self, ID: int):
         self.marker = Marker()
@@ -104,6 +112,7 @@ class Visitor_Node(Node):
         self.marker_publisher = self.create_publisher(
             Marker, f'visitor_location_marker_{self.agent.Id}', 10)
         self.publish()
+        self.get_logger().info(f'Set up marker with ID: {ID}')
 
     def setClient(self, ID: str, host: str, host_location: str):
         self.client = self.create_client(
@@ -114,3 +123,4 @@ class Visitor_Node(Node):
         self.request.hostlocation = host_location
         self.pub_private = self.create_publisher(
             Findci, f'private_{self.agent.ci}_{self.agent.Id}', 10)
+        self.get_logger().info(f'Visitor Obtained Client: {self.agent.ci}')
