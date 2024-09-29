@@ -16,7 +16,7 @@ So, the command for creating the branch will be of the form
 `git branch "Bx__Task"`  
 To switch to this branch, use  
 `git checkout "Bx__Task"`  
-To compress these two together  
+To do the above two actions together in a single command   
 `git checkout -b "Bx__Task"`  
 
 ## Commit Instructions  

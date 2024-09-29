@@ -4,7 +4,7 @@ package_name = 'mscvt_ros'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='1.0.0',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -15,12 +15,13 @@ setup(
     install_requires=['setuptools', 'geometry_msgs',
                       'visualization_msgs'],
     zip_safe=True,
-    maintainer='yash26',
+    maintainer='Yash Shrivastava',
     maintainer_email='shrivastavayash26@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='A multiagent system for Campus Visitor Tour',
+    license='UNKNOWN',
     entry_points={
         'console_scripts': [
+            'system = mscvt_ros.main:main',
         ],
     },
 )

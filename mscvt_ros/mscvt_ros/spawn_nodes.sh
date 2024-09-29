@@ -1,7 +1,8 @@
 #!/bin/bash
-# Adds v visitor agents, BI agents and c CI agents to main.py
+# Adds v visitor agents, BI agents and c CI agents to 'main.py'
 # by running ./spawn_nodes.sh v c
-FILE_PATH="main.py"
+rm main.py
+touch main.py
 v=$1
 c=$2
 
@@ -14,11 +15,11 @@ if [ $c -le 0 ]; then
     exit 1
 fi
 
-cat <<EOT >>"$FILE_PATH"
+cat <<EOT >>''main.py''
 import heapq
 import rclpy
 import random
-from mscvt.agents.visitor_params import visitor_params
+from mscvt.agents.visitor_params import VisitorParams
 from mscvt.maps.coordinates import locations
 from bi_node import BIAgentNode
 from ci_node import CINode
@@ -61,33 +62,36 @@ def main():
     min_paths = find_min_paths(campus_map.get_adjacency_list(), locations)
 
     modes = ['car', 'bike', 'walk']
-    visitor_params = 
 
 EOT
 
 for i in $(seq 1 $v); do
-    echo -e "\tvisitor_node_$i = Visitor_Node()" >>"$FILE_PATH"
+    echo -e "\tvisitor_node_$i = Visitor_Node(\n\t\tID='V$i', host=VisitorParams['host'][$((i - 1))], host_location=VisitorParams['host_location'][$((i - 1))])" >>'main.py'
 done
+echo >> 'main.py'
 for i in $(seq 1 32); do
-    echo -e "\tbi_node_$i = BIAgentNode(campus_map.building[$((i-1))])" >>"$FILE_PATH"
+    echo -e "\tbi_node_$i = BIAgentNode(campus_map.building[$((i - 1))])" >>'main.py'
 done
+echo >> 'main.py'
 for i in $(seq 1 $c); do
-    echo -e "\tci_node_$i = CINode(ID='CI_$i', map=min_paths, mode=modes[random.randint(0,2)])" >>"$FILE_PATH"
+    echo -e "\tci_node_$i = CINode(ID='CI_$i', map=min_paths,\n\t\t\t\t\tmode=modes[random.randint(0,2)])" >>'main.py'
 done
 
-echo -e '\texecutor = MultiThreadExecutor()\n' >>"$FILE_PATH"
+echo -e '\n\texecutor = MultiThreadExecutor()\n' >>'main.py'
 
 for i in $(seq 1 $v); do
-    echo -e "\texecutor.add_node(visitor_node_$i)" >>"$FILE_PATH"
+    echo -e "\texecutor.add_node(visitor_node_$i)" >>'main.py'
 done
+echo >> 'main.py'
 for i in $(seq 1 32); do
-    echo -e "\texecutor.add_node(bi_node_$i)" >>"$FILE_PATH"
+    echo -e "\texecutor.add_node(bi_node_$i)" >>'main.py'
 done
+echo >> 'main.py'
 for i in $(seq 1 $c); do
-    echo -e "\texecutor.add_node(ci_node_$i)" >>"$FILE_PATH"
+    echo -e "\texecutor.add_node(ci_node_$i)" >>'main.py'
 done
 
-cat <<EOT >>"$FILE_PATH"
+cat <<EOT >>'main.py'
 
     try:
         executor.spin()
@@ -96,7 +100,9 @@ cat <<EOT >>"$FILE_PATH"
 
     rclpy.shutdown()
 
-main()
+
+if __name__ == '__main__':
+    main()
 EOT
 
-echo "$n Agents code has been added to main.py."
+echo "$v visitors and $c Campus Incharges code has been added to 'main.py'."
