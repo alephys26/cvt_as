@@ -14,11 +14,11 @@ class Building:
         self.residents = {}
         self.BI_Id = f"{self.building_name}-F1-R101"
         self.auth_meetings = {}
-        self.building_structure()
         self.visitors={}
         self.visitors['id']=[]
         self.visitors['host_location']=[]
         self.visitors['host']=[]
+        self.building_structure()
 
     def building_structure(self):
         if self.building_type == "hostel":

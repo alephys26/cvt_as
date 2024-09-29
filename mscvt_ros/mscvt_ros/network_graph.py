@@ -39,7 +39,6 @@ class CampusMap:
         physics_dept = Building('Physics', 'dept', locations['Physics'])
         sola = Building('SOLA', 'dept', locations['SOLA'])
         sme = Building('SME', 'dept', locations['SME'])
-        material_dept = Building('Material Science', 'dept', locations['Material Science'])
         I2 = Building('I2', 'hostel', locations['I2'])
         I3 = Building('I3', 'hostel', locations['I3'])
         B1 = Building('B1', 'hostel', locations['B1'])
@@ -73,7 +72,6 @@ class CampusMap:
             physics_dept,
             sola,
             sme,
-            material_dept,
             I2,
             I3,
             B1,
@@ -108,7 +106,6 @@ class CampusMap:
         self.add_location(physics_dept.building_name)
         self.add_location(sola.building_name)
         self.add_location(sme.building_name)
-        self.add_location(material_dept.building_name)
         self.add_location(I2.building_name)
         self.add_location(I3.building_name)
         self.add_location(B1.building_name)
@@ -154,9 +151,6 @@ class CampusMap:
                       mechanical_dept.building_name, weight=1)
         self.add_path(mechanical_dept.building_name,
                       sola.building_name, weight=1)
-        self.add_path(mechanical_dept.building_name,
-                      material_dept.building_name, weight=1)
-        self.add_path(material_dept.building_name, sme.building_name, weight=1)
 
         self.add_path(main_gate.building_name, I2.building_name, weight=10)
         self.add_path(I2.building_name, I3.building_name, weight=1)

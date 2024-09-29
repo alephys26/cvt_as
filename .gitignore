@@ -1,6 +1,7 @@
 .env
-__pycache__/
+mscvt_ros/mscvt_ros/__pycache__/
 build/
 install/
 log/
+.env
 *.ipynb
