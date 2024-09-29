@@ -1,5 +1,4 @@
 import networkx as nx
-import matplotlib.pyplot as plt
 
 
 class BuildingCreation:
@@ -84,18 +83,3 @@ class BuildingCreation:
                 adjacency_list[node][neighbor] = self.G[node][neighbor]['weight']
 
         return adjacency_list
-
-    def visualize_graph(self):
-        pos = nx.spring_layout(self.G)
-        plt.figure(figsize=(8, 6))
-        nx.draw(self.G, pos, with_labels=True, node_color='skyblue',
-                node_size=3000, font_size=10, font_weight='bold', edge_color='gray')
-        edge_labels = nx.get_edge_attributes(self.G, 'weight')
-        nx.draw_networkx_edge_labels(self.G, pos, edge_labels=edge_labels)
-        plt.title(f"Graph of {self.building_name} ({self.building_type})")
-        plt.show()
-
-# # Example usage
-# building = building_creation('house', 'director')
-# abc=building.create_building()
-# building.visualize_graph()

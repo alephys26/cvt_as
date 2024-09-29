@@ -11,21 +11,21 @@ if [ $v -le 0 ]; then
     exit 1
 fi
 if [ $c -le 0 ]; then
-    echo "$v is incorrect, have some positive number of visitors."
+    echo "$c is incorrect, have some positive number of CI agents."
     exit 1
 fi
 
-cat <<EOT >>''main.py''
+cat <<EOT >> 'main.py'
 import heapq
 import rclpy
 import random
-from mscvt.maps.coordinates import locations
+from coordinates import locations
 from bi_node import BIAgentNode
 from ci_node import CINode
 from visitor_node import Visitor_Node
 from campus_map_publisher import CampusMapPublisher
-from mscvt.maps.network_graph import CampusMap
-from rclpy.executor import MultiThreadExecutor
+from network_graph import CampusMap
+from rclpy.executors import MultiThreadedExecutor
 
 
 def find_min_paths(adjacency_list, locations):
@@ -57,7 +57,11 @@ def find_min_paths(adjacency_list, locations):
 
 
 def get_visitors(campus_map, n_visitors):
-    visitors_auth = {}
+    visitors_auth = {
+        'id': [],
+        'host': [],
+        'host_location': []
+    }
     for building in campus_map.building:
         visitors_auth['id'] += building.visitors['id']
         visitors_auth['host'] += building.visitors['host']
@@ -75,37 +79,36 @@ def main():
 
     modes = ['car', 'bike', 'walk']
     indices, visitors = get_visitors(campus_map, $v)
-
-
+    rclpy.init()
 EOT
 
 for i in $(seq 1 $v); do
-    echo -e "\tvisitor_node_$i = Visitor_Node(\n\t\tID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]])" >>'main.py'
+    echo -e "    visitor_node_$i = Visitor_Node(\n        ID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]])" >> 'main.py'
 done
 echo >> 'main.py'
 for i in $(seq 1 32); do
-    echo -e "\tbi_node_$i = BIAgentNode(campus_map.building[$((i - 1))])" >>'main.py'
+    echo -e "    bi_node_$i = BIAgentNode(campus_map.building[$((i - 1))])" >> 'main.py'
 done
 echo >> 'main.py'
 for i in $(seq 1 $c); do
-    echo -e "\tci_node_$i = CINode(ID='CI_$i', map=min_paths,\n\t\t\t\t\tmode=modes[random.randint(0,2)])" >>'main.py'
+    echo -e "    ci_node_$i = CINode(ID='CI_$i', map=min_paths,\n                    mode=modes[random.randint(0,2)])" >> 'main.py'
 done
 
-echo -e '\n\texecutor = MultiThreadExecutor()\n' >>'main.py'
+echo -e '\n    executor = MultiThreadExecutor()\n' >> 'main.py'
 
 for i in $(seq 1 $v); do
-    echo -e "\texecutor.add_node(visitor_node_$i)" >>'main.py'
+    echo -e "    executor.add_node(visitor_node_$i)" >> 'main.py'
 done
 echo >> 'main.py'
 for i in $(seq 1 32); do
-    echo -e "\texecutor.add_node(bi_node_$i)" >>'main.py'
+    echo -e "    executor.add_node(bi_node_$i)" >> 'main.py'
 done
 echo >> 'main.py'
 for i in $(seq 1 $c); do
-    echo -e "\texecutor.add_node(ci_node_$i)" >>'main.py'
+    echo -e "    executor.add_node(ci_node_$i)" >> 'main.py'
 done
 
-cat <<EOT >>'main.py'
+cat <<EOT >> 'main.py'
 
     try:
         executor.spin()

@@ -1,6 +1,5 @@
 from building_creation import BuildingCreation
 import networkx as nx
-import matplotlib.pyplot as plt
 import heapq
 
 
@@ -104,14 +103,3 @@ class Building:
             residentPaths[resident] = paths[self.residents[resident]]
         return paths
 
-    def visualize_graph(self):
-        G = self.graph.get_graph()  # Get the graph from building_creation
-        pos = nx.spring_layout(G)  # Positions for all nodes
-        plt.figure(figsize=(8, 6))
-        nx.draw(G, pos, with_labels=True, node_color='skyblue',
-                node_size=3000, font_size=10, font_weight='bold', edge_color='gray')
-        # Draw edge labels to show weights
-        edge_labels = nx.get_edge_attributes(G, 'weight')
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
-        plt.title(f"Graph of {self.building_name} ({self.building_type})")
-        plt.show()

@@ -1,5 +1,6 @@
-from mscvt.agents.bi_agent import BI_Agent as bia
-from mscvt.maps.building import Building
+from bi_agent import BI_Agent as bia
+from building import Building
+import rclpy
 from rclpy.node import Node
 from mscvt_messages.srv import CIrequest
 from visualization_msgs.msg import Marker

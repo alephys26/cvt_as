@@ -1,5 +1,4 @@
 import networkx as nx
-import matplotlib.pyplot as plt
 from building import Building
 
 
@@ -13,18 +12,6 @@ class CampusMap:
 
     def add_path(self, from_location, to_location, weight=1):
         self.graph.add_edge(from_location, to_location, weight=weight)
-
-    def visualize_map(self):
-        pos = nx.spring_layout(self.graph)
-        edge_labels = nx.get_edge_attributes(self.graph, 'weight')
-
-        # Draw the main campus map
-        nx.draw(self.graph, pos, with_labels=True, node_size=700,
-                node_color='skyblue', font_size=10, font_weight='bold')
-        nx.draw_networkx_edge_labels(
-            self.graph, pos, edge_labels=edge_labels, font_color='red')
-
-        plt.show()
 
     def get_adjacency_list(self):
         adjacency_list = {}

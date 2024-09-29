@@ -2,8 +2,8 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker, MarkerArray
-from mscvt.maps.coordinates import locations, edges
-from mscvt.maps.network_graph import CampusMap
+from coordinates import locations, edges
+from network_graph import CampusMap
 import sys
 import os
 

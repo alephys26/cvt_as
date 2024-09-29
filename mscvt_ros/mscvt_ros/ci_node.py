@@ -1,9 +1,8 @@
 import rclpy
 from rclpy.node import Node
-from mscvt.srv import Visitor, CIrequest
+from mscvt_messages.srv import Visitor, CIrequest
 from geometry_msgs.msg import Point
-from mscvt.src.mscvt.agents.ci_agent import CI_Agent
-from typing import Optional, List
+from ci_agent import CI_Agent
 from mscvt_messages.msg import Findci
 from visualization_msgs.msg import Marker
 from time import sleep

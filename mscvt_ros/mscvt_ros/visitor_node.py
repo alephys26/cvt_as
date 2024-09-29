@@ -1,4 +1,4 @@
-from mscvt.agents.visitor import Visitor as vi
+from visitor import Visitor as vi
 from rclpy.node import Node
 from mscvt_messages.srv import Visitor
 from mscvt_messages.msg import Findci
