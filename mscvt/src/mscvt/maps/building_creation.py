@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-class building_creation:
+class BuildingCreation:
     def __init__(self, building_type, building_name):
         self.building_type = building_type
         self.building_name = building_name
