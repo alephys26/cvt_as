@@ -36,6 +36,7 @@ class CampusMap:
         return adjacency_list
 
     def create_campus_map(self):
+
         main_gate = Building("Main Gate", "gate")
         office = Building("Office", "dept")
         library = Building("Library", "dept")
@@ -68,6 +69,42 @@ class CampusMap:
         G6 = Building("G6", "hostel")
         director_house = Building("Director House", "house")
         faculty_quarters = Building("Faculty Quarters", "hostel")
+
+        self.building = [
+            main_gate,
+            office,
+            library,
+            data_center,
+            lhc,
+            blb,
+            cse_dept,
+            bio_dept,
+            chemical_dept,
+            electrical_dept,
+            civil_dept,
+            mechanical_dept,
+            physics_dept,
+            sola,
+            sme,
+            material_dept,
+            I2,
+            I3,
+            B1,
+            B2,
+            B3,
+            B4,
+            B5,
+            old_mess,
+            G1,
+            G2,
+            G3,
+            G4,
+            G5,
+            G6,
+            director_house,
+            faculty_quarters
+        ]
+
 
         self.add_location(main_gate.building_name)
         self.add_location(office.building_name)
