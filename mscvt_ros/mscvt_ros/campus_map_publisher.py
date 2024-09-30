@@ -82,8 +82,6 @@ class CampusMapPublisher(Node):
                 room_marker.color.a = 0.4
                 marker_array.markers.append(room_marker)
 
-                
-
                 # # Room Label Marker
                 # room_label_marker = Marker()
                 # room_label_marker.header.frame_id = 'map'
