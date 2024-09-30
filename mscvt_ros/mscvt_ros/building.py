@@ -1,7 +1,168 @@
-from mscvt_ros.building_creation import BuildingCreation
 import networkx as nx
 import heapq
 import matplotlib.pyplot as plt 
+import networkx as nx
+import matplotlib.pyplot as plt 
+import random
+temp1 = [-0.25, 0.25, 0]
+temp2 = [0, 0, 0.25]
+class BuildingCreation:
+    def __init__(self, building_type, building_name, coordinate):
+        self.building_type = building_type
+        self.building_name = building_name
+        self.coordinate_building = {}
+        self.coordinate = coordinate
+        self.G = nx.Graph()
+
+    def create_building(self):
+        if self.building_type == 'hostel':
+            return self.create_hostel()
+        elif self.building_type == 'dept':
+            return self.create_department()
+        elif self.building_type == 'house':
+            return self.create_director()
+        elif self.building_type == 'gate':
+            return self.create_gate()
+        else:
+            print("Invalid building type")
+
+    def create_gate(self):
+        self.G.add_node(self.building_name)
+
+
+    def create_hostel(self):
+        FLOORS = 3
+        ROOMS_PER_FLOOR = 3
+        ROOM_OFFSETS = [(-0.5, 0), (0.5, 0), (0, 0.5)]  # x, y offsets for rooms
+
+        self.G.add_node(self.building_name)
+        previous_node = self.building_name
+
+        for floor in range(1, FLOORS + 1):
+            floor_node = f'Floor {floor}'
+            floor_coords = (*self.coordinate[:2], float(floor))
+            self.coordinate_building[floor_node] = floor_coords
+            
+            self.G.add_edge(previous_node, floor_node, weight=1)
+            previous_node = floor_node
+
+            for room in range(1, ROOMS_PER_FLOOR + 1):
+                room_node = f'F{floor}_R10{room}'
+                x_offset, y_offset = ROOM_OFFSETS[room - 1]
+                room_coords = (
+                    self.coordinate[0] + x_offset,
+                    self.coordinate[1] + y_offset,
+                    float(floor)
+                )
+                self.coordinate_building[room_node] = room_coords
+                self.G.add_edge(floor_node, room_node, weight=1)
+
+
+    def create_department(self):
+        FLOORS = 2
+        ROOMS_PER_FLOOR = 2
+        ROOM_OFFSETS = [(-0.5, 0), (0.5, 0)]  
+
+        self.G.add_node(self.building_name)
+        previous_node = self.building_name
+
+        for floor in range(1, FLOORS + 1):
+            floor_node = f'Floor {floor}'
+            floor_coords = (*self.coordinate[:2], float(floor))
+            self.coordinate_building[floor_node] = floor_coords
+            
+            self.G.add_edge(previous_node, floor_node, weight=1)
+            previous_node = floor_node
+
+            for room in range(1, ROOMS_PER_FLOOR + 1):
+                room_node = f'F{floor}_R10{room}'
+                x_offset, y_offset = ROOM_OFFSETS[room - 1]
+                room_coords = (
+                    self.coordinate[0] + x_offset,
+                    self.coordinate[1] + y_offset,
+                    float(floor)
+                )
+                self.coordinate_building[room_node] = room_coords
+                self.G.add_edge(floor_node, room_node, weight=1)
+
+
+    def create_director(self):
+        FLOORS = 1
+        ROOMS_PER_FLOOR = 1
+        ROOM_OFFSET = [(0, 0.5)]  
+
+        self.G.add_node(self.building_name)
+        previous_node = self.building_name
+
+        for floor in range(1, FLOORS + 1):
+            floor_node = f'Floor {floor}'
+            floor_coords = (*self.coordinate[:2], float(floor))
+            self.coordinate_building[floor_node] = floor_coords
+
+            self.G.add_edge(previous_node, floor_node, weight=1)
+            previous_node = floor_node
+
+            for room in range(1, ROOMS_PER_FLOOR + 1):
+                room_node = f'F{floor}_R10{room}'
+                x_offset, y_offset = ROOM_OFFSET[room - 1]
+                room_coords = (
+                    self.coordinate[0] + x_offset,
+                    self.coordinate[1] + y_offset,
+                    float(floor)
+                )
+                self.coordinate_building[room_node] = room_coords
+                self.G.add_edge(floor_node, room_node, weight=1)
+
+
+    def get_graph(self):
+        return self.G
+
+    def get_adjacency_list(self):
+        return {
+            node: {neighbor: self.G[node][neighbor]['weight'] for neighbor in self.G.neighbors(node)}
+            for node in self.G.nodes
+        }
+
+
+    def visualize_graph(self):
+        plt.figure(figsize=(18, 12)) 
+        pos = nx.spring_layout(self.G, scale=3) 
+        labels = nx.get_edge_attributes(self.G, 'weight')
+
+        nx.draw(self.G, pos, with_labels=True, node_size=2500, node_color='lightblue', 
+                font_size=16, font_weight='bold', width=3, edge_color='gray')
+        nx.draw_networkx_edge_labels(self.G, pos, edge_labels=labels, font_size=14)
+
+        extra_edges = []
+        nodes = list(self.G.nodes)
+        
+        for _ in range(len(nodes) // 2):  
+            n1, n2 = random.sample(nodes, 2)
+            if not self.G.has_edge(n1, n2):  
+                extra_edges.append((n1, n2))
+        
+        nx.draw_networkx_edges(self.G, pos, edgelist=extra_edges, width=2, alpha=0.5, edge_color='red', style='dashed')
+        plt.title(f'Extra-Large Graph Visualization for {self.building_name} with Extra Lines', fontsize=22, fontweight='bold')
+        plt.show()
+
+    def remove_room(self, floor, room_number):
+        room_node = f'F{floor}_R{room_number}'
+        if room_node in self.G:
+            self.G.remove_node(room_node)
+            del self.coordinate_building[room_node]
+            print(f"Removed room {room_number} from floor {floor}.")
+        else:
+            print(f"Room {room_number} on floor {floor} does not exist.")
+    
+    def find_shortest_path(self, start_node, end_node):
+        if start_node not in self.G or end_node not in self.G:
+            return None
+        try:
+            path = nx.shortest_path(self.G, start_node, end_node)
+            return path
+        except nx.NetworkXNoPath:
+            return None
+        
 
 class Building:
 
@@ -21,25 +182,13 @@ class Building:
         self.building_structure()
         self.graph.create_building()
 
-    # def building_structure(self):
-    #     if self.building_type == "hostel":
-    #         self.create_hostel_structure()
-    #     elif self.building_type == "dept":
-    #         self.create_dept_structure()
-    #     elif self.building_type == "house":
-    #         self.create_house_structure()
-    #     elif self.building_type == 'gate':
-    #         pass
-    #     else:
-    #         raise ValueError(
-    #             "Unknown building type. Please choose from 'hostel', 'dept', or 'house'.")
     def building_structure(self):
         """Create building structure based on building type."""
         structure_methods = {
             "hostel": self.create_hostel_structure,
             "dept": self.create_dept_structure,
             "house": self.create_house_structure,
-            "gate": lambda: None  # No action for 'gate'
+            "gate": lambda: None  
         }
 
         method = structure_methods.get(self.building_type)
@@ -50,17 +199,8 @@ class Building:
             raise ValueError("Unknown building type. Please choose from 'hostel', 'dept', 'house', or 'gate'.")
 
 
-    # def create_hostel_structure(self):
-    #     # Hostel has 3 floors and 3 rooms per floor
-    #     for floor in range(1, 4):  # 3 floors
-    #         for room in range(1, 4):  # 3 rooms per floor
-    #             resident_id = f"{self.building_name}_F{floor}_R{100 + room}"
-    #             self.residents[resident_id] = f"F{floor}_R{100 + room}"
-    #             self.auth_meetings[resident_id] = self.create_authorized_persons(
-    #                 resident_id)
-
+  
     def create_hostel_structure(self):
-        """Create the structure for the hostel with 3 floors and 3 rooms per floor."""
         FLOORS = 3
         ROOMS_PER_FLOOR = 3
 
@@ -71,17 +211,8 @@ class Building:
                 self.auth_meetings[resident_id] = self.create_authorized_persons(resident_id)
 
 
-    # def create_dept_structure(self):
-    #     # Dept has 2 floors and 2 rooms per floor
-    #     for floor in range(1, 3):  # 2 floors
-    #         for room in range(1, 3):  # 2 rooms per floor
-    #             resident_id = f"{self.building_name}_F{floor}_R{100 + room}"
-    #             self.residents[resident_id] = f"F{floor}_R{100 + room}"
-    #             self.auth_meetings[resident_id] = self.create_authorized_persons(
-    #                 resident_id)
 
     def create_dept_structure(self):
-        """Create the structure for the department with 2 floors and 2 rooms per floor."""
         FLOORS = 2
         ROOMS_PER_FLOOR = 2
 
@@ -92,15 +223,8 @@ class Building:
                 self.auth_meetings[resident_id] = self.create_authorized_persons(resident_id)
 
 
-    # def create_house_structure(self):
-    #     # House has 1 floor and 1 room
-    #     resident_id = f"{self.building_name}_F1_R101"
-    #     self.residents[resident_id] = 'F1_R101'
-    #     self.auth_meetings[resident_id] = self.create_authorized_persons(
-    #         resident_id)
 
     def create_house_structure(self):
-        """Create the structure for the house with 1 floor and 1 room."""
         FLOOR = 1
         ROOM = 1
 
@@ -108,49 +232,32 @@ class Building:
         self.residents[resident_id] = f'F{FLOOR}_R{100 + ROOM}'
         self.auth_meetings[resident_id] = self.create_authorized_persons(resident_id)
 
-    # def create_authorized_persons(self, resident_id):
-    #     # Create 3 authorized persons (random person IDs)
-    #     authorized_persons = [
-    #         f"{resident_id}_P00{i}" for i in range(1, 4)]  # P001, P002, P003
-    #     self.visitors['id'] += authorized_persons
-    #     self.visitors['host'] += [resident_id for _ in range(3)]
-    #     self.visitors['host_location'] += [
-    #         self.building_name for _ in range(3)]
-    #     return authorized_persons
+
 
     def create_authorized_persons(self, resident_id):
-        """Create 3 authorized persons with random person IDs based on the resident ID."""
 
-        # Define the number of authorized persons to create
         NUM_AUTHORIZED_PERSONS = 3
 
-        # Initialize an empty list to hold the authorized person IDs
         authorized_persons = []
 
-        # Create the authorized person IDs using a loop for clarity
         for i in range(1, NUM_AUTHORIZED_PERSONS + 1):
-            person_id = f"{resident_id}_P00{i}"  # Format the ID
-            authorized_persons.append(person_id)  # Add to the list
+            person_id = f"{resident_id}_P00{i}"  
+            authorized_persons.append(person_id)  
 
-        # Update visitors information
-        # Ensure the 'id' key exists in visitors dictionary
         if 'id' not in self.visitors:
-            self.visitors['id'] = []  # Initialize if not present
-        self.visitors['id'] += authorized_persons  # Append the new person IDs
+            self.visitors['id'] = [] 
+        self.visitors['id'] += authorized_persons  
 
-        # Ensure the 'host' key exists in visitors dictionary
         if 'host' not in self.visitors:
-            self.visitors['host'] = []  # Initialize if not present
+            self.visitors['host'] = []  
         for _ in range(NUM_AUTHORIZED_PERSONS):
-            self.visitors['host'].append(resident_id)  # Add the resident ID for each authorized person
+            self.visitors['host'].append(resident_id)  
 
-        # Ensure the 'host_location' key exists in visitors dictionary
         if 'host_location' not in self.visitors:
-            self.visitors['host_location'] = []  # Initialize if not present
+            self.visitors['host_location'] = []  
         for _ in range(NUM_AUTHORIZED_PERSONS):
-            self.visitors['host_location'].append(self.building_name)  # Add the building name for each authorized person
+            self.visitors['host_location'].append(self.building_name)  
 
-        # Return the list of authorized persons created
         return authorized_persons
 
 
@@ -170,7 +277,7 @@ class Building:
             residentPaths[resident] = paths[self.residents[resident]]
         return residentPaths
     
-    
+
     def visualize_building(self):
         G = nx.Graph()
 

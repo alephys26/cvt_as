@@ -11,9 +11,7 @@
 v=$1
 c=$2
 
-cd mscvt_ros/mscvt_ros
-bash spawn_nodes.sh $v $c
-cd ../..
+
 
 source /opt/ros/iron/setup.bash
 colcon build
