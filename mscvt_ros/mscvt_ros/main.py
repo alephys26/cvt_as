@@ -60,8 +60,10 @@ def main():
     min_paths = find_min_paths(campus_map.get_adjacency_list(), locations)
 
     modes = ['car', 'bike', 'walk']
-    indices, visitors = get_visitors(campus_map, 1)
+    indices, visitors = get_visitors(campus_map, 2)
     rclpy.init()
+
+    campus_map_publisher = CampusMapPublisher()
     bi_node_1 = BIAgentNode(building=campus_map.building[1], marker_id=1)
     bi_node_2 = BIAgentNode(building=campus_map.building[2], marker_id=2)
     bi_node_3 = BIAgentNode(building=campus_map.building[3], marker_id=3)
@@ -98,9 +100,12 @@ def main():
 
     visitor_node_1 = Visitor_Node(
         ID=visitors['id'][indices[0]], host=visitors['host'][indices[0]], host_location=visitors['host_location'][indices[0]], marker_id=1)
+    visitor_node_2 = Visitor_Node(
+        ID=visitors['id'][indices[1]], host=visitors['host'][indices[1]], host_location=visitors['host_location'][indices[1]], marker_id=2)
 
     executor = MultiThreadedExecutor()
 
+    executor.add_node(campus_map_publisher)
     executor.add_node(bi_node_1)
     executor.add_node(bi_node_2)
     executor.add_node(bi_node_3)
@@ -135,6 +140,7 @@ def main():
     executor.add_node(ci_node_1)
 
     executor.add_node(visitor_node_1)
+    executor.add_node(visitor_node_2)
 
     try:
         executor.spin()

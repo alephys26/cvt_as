@@ -74,12 +74,12 @@ class Building:
         for room in self.residents.values():
             paths[room] = [0, []]
             f = int(room[1])
+            paths[room][1].append(self.building_name)
             for i in range(1, f):
                 paths[room][1].append(
                     self.graph.coordinate_building[f"Floor {i}"])
             paths[room][1].append(self.graph.coordinate_building[room])
-            paths[room][0] = f
-
+            paths[room][0] = f+0.5
         residentPaths = {}
         for resident in self.residents:
             residentPaths[resident] = paths[self.residents[resident]]

@@ -39,6 +39,7 @@ class BI_Agent():
             if self.isVisitorAuthorized(host, visitor):
                 if self.isHostFree(host):
                     hostPath = self.path[host]
+                    print(hostPath)
                     self.travel_time = hostPath[0] / 0.5
                     self.meet[host] = time.time() + self.meeting_time + self.travel_time
                     self.logger.info(f'Host {host} is free. Visitor {visitor} can proceed to meet.')

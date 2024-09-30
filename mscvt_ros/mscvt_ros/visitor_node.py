@@ -18,11 +18,11 @@ class Visitor_Node(Node):
         self.coordinates = (0.0, 0.0, 0.0)
         self.setUpMarker(marker_id)
         self.pub = self.create_publisher(Findci, 'need_ci', 1)
-        self.pub_timer = self.create_timer(0.1, self.publish)
         self.subs = self.create_subscription(
             Findci, 'ci_reply', self.isCIAvailable, 10)
 
         self.timer = self.create_timer(3.0, self.searchForCI)
+        self.pub_timer = self.create_timer(0.2, self.publish)
 
     def searchForCI(self):
         if self.agent.ci != '':
@@ -49,6 +49,9 @@ class Visitor_Node(Node):
 
     def handleCIResponse(self, future):
         result = future.result()
+        if len(result.points)==0:
+            sleep(1.0)
+            return self.talkWithCI()
         self.speed = result.speed
         self.path = [(p.x, p.y, p.z) for p in result.points]
         self.get_logger().info(
@@ -77,23 +80,20 @@ class Visitor_Node(Node):
             while self.not_equal(next_point, self.coordinates):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
-                sleep(0.1)
+                sleep(0.2)
 
         self.travelCount += 1
         if self.travelCount == 1:
             self.request.hostlocation = 'INSIDE'
             self.get_logger().info('Travel Count 1: Requesting CI inside')
-            print("VI",self.coordinates)
             self.talkWithCI()
         elif self.travelCount == 2:
             self.path = self.path[::-1]
             self.get_logger().info('Travel Count 2: Reversing path')
-            print("VI",self.coordinates)
             self.travel()
         elif self.travelCount == 3:
             self.request.hostlocation = 'Main_Gate'
             self.get_logger().info('Travel Count 3: Requesting CI at Main Gate')
-            print("VI",self.coordinates)
             self.talkWithCI()
         else:
             self.marker.action = Marker.DELETE

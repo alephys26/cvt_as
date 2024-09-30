@@ -25,14 +25,16 @@ class BuildingCreation:
         self.G.add_node(self.building_name)
 
     def create_hostel(self):
+        self.G.add_node(self.building_name)
         arr1 = [-0.5, 0.5, 0]
         arr2 = [0, 0, 0.5]
+        previous_node = self.building_name
         for floor in range(1, 4):
             floor_node = f'Floor {floor}'
             self.coordinate_building[floor_node] = (
                 self.coordinate[0], self.coordinate[1], float(floor))
-            if floor != 1:
-                self.G.add_edge(previous_node, floor_node, weight=1)
+            # if floor != 1:
+            self.G.add_edge(previous_node, floor_node, weight=1)
             previous_node = floor_node
 
             for room in range(1, 4):
@@ -44,12 +46,14 @@ class BuildingCreation:
     def create_department(self):
         arr1 = [-0.5, 0.5, 0]
         arr2 = [0, 0, 0.5]
+        self.G.add_node(self.building_name)
+        previous_node = self.building_name
         for floor in range(1, 3):
             floor_node = f'Floor {floor}'
             self.coordinate_building[floor_node] = (
                 self.coordinate[0], self.coordinate[1], float(floor))
-            if floor != 1:
-                self.G.add_edge(previous_node, floor_node, weight=1)
+            # if floor != 1:
+            self.G.add_edge(previous_node, floor_node, weight=1)
             previous_node = floor_node
 
             for room in range(1, 3):
@@ -59,9 +63,12 @@ class BuildingCreation:
                 self.G.add_edge(floor_node, room_node, weight=1)
 
     def create_director(self):
+        self.G.add_node(self.building_name)
         floor_node = 'Floor 1'
         self.coordinate_building[floor_node] = (
             self.coordinate[0], self.coordinate[1], 1.0)
+        self.G.add_edge(self.building_name, floor_node, weight=1)
+
         room_node = f'F1_R101'
         self.coordinate_building[room_node] = (
             self.coordinate[0], self.coordinate[1]+0.5, 1.0)
@@ -75,6 +82,7 @@ class BuildingCreation:
         for node in list(self.G.nodes):
             adjacency_list[node] = {}
             for neighbor in self.G.neighbors(node):
+                # if neighbor!=self.building_name:
                 adjacency_list[node][neighbor] = self.G[node][neighbor]['weight']
 
         return adjacency_list
