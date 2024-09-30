@@ -49,7 +49,6 @@ def get_visitors(campus_map, n_visitors):
         visitors_auth['host'] += building.visitors['host']
         visitors_auth['host_location'] += building.visitors['host_location']
 
-    n_visitors = min(n_visitors, len(visitors_auth['host']))
     indices = random.sample(range(len(visitors_auth['host'])), n_visitors)
 
     return indices, visitors_auth
