@@ -18,6 +18,7 @@ class Visitor_Node(Node):
         self.coordinates = (0.0, 0.0, 0.0)
         self.setUpMarker(marker_id)
         self.pub = self.create_publisher(Findci, 'need_ci', 1)
+        self.pub_timer = self.create_timer(0.1, self.publish)
         self.subs = self.create_subscription(
             Findci, 'ci_reply', self.isCIAvailable, 10)
 
@@ -76,7 +77,6 @@ class Visitor_Node(Node):
             while self.not_equal(next_point, self.coordinates):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
-                self.publish()
                 sleep(0.1)
 
         self.travelCount += 1

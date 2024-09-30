@@ -15,6 +15,7 @@ class BIAgentNode(Node):
         self.agent = bia(building.get_paths(), building.residents,
                          building.auth_meetings, building.BI_Id)
         self.setUpMarker(marker_id)
+        self.timer = self.create_timer(1.0, self.publish)
         self.srv = self.create_service(
             CIrequest, f'ci_request_{building.building_name}', self.handle_ci_request)
         self.get_logger().info(
@@ -51,13 +52,15 @@ class BIAgentNode(Node):
         self.marker.color.g = 1.0
         self.marker.color.b = 0.0
         self.marker.color.a = 0.5
-        self.marker.pose.position.x = self.coordinates[0]
-        self.marker.pose.position.y = self.coordinates[1]
-        self.marker.pose.position.z = self.coordinates[2]
         self.marker_publisher = self.create_publisher(
             Marker, f'bi_location_marker_{self.agent.Id}', 10)
         self.get_logger().info(
             f"Marker set up for BI Agent ({self.agent.Id}).")
-        self.marker_publisher.publish(self.marker)
         self.get_logger().info(
             f"Marker published for BI Agent ({self.agent.Id}).")
+
+    def publish(self):
+        self.marker.pose.position.x = self.coordinates[0]
+        self.marker.pose.position.y = self.coordinates[1]
+        self.marker.pose.position.z = self.coordinates[2]
+        self.marker_publisher.publish(self.marker)

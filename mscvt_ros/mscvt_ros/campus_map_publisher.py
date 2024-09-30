@@ -12,7 +12,7 @@ class CampusMapPublisher(Node):
     def __init__(self):
         super().__init__('campus_map_publisher')
         self.publisher_ = self.create_publisher(MarkerArray, 'campus_map', 10)
-        self.timer = self.create_timer(1.0, self.publish_map)
+        self.pu
         self.map = CampusMap()
         sys.path.append(os.path.abspath(os.path.join(
             os.path.dirname(__file__), '..', '..', 'maps')))
@@ -59,7 +59,7 @@ class CampusMapPublisher(Node):
             label_marker.color.a = 1.0
             label_marker.text = location
             marker_array.markers.append(label_marker)
-
+        len(marker_array)
         for building in self.map.building:
             for floors_rooms, coord in building.graph.coordinate_building.items():
                 room_marker = Marker()
@@ -76,31 +76,31 @@ class CampusMapPublisher(Node):
                 room_marker.scale.x = 0.1
                 room_marker.scale.y = 0.1
                 room_marker.scale.z = 0.1
-                room_marker.color.r = 0.0
-                room_marker.color.g = 0.0
-                room_marker.color.b = 1.0
+                room_marker.color.r = 0.68
+                room_marker.color.g = 0.85
+                room_marker.color.b = 0.9
                 room_marker.color.a = 0.4
                 marker_array.markers.append(room_marker)
 
-                # Room Label Marker
-                room_label_marker = Marker()
-                room_label_marker.header.frame_id = 'map'
-                room_label_marker.header.stamp = self.get_clock().now().to_msg()
-                room_label_marker.ns = 'campus_map'
-                room_label_marker.id = len(marker_array.markers)
-                room_label_marker.type = Marker.TEXT_VIEW_FACING
-                room_label_marker.action = Marker.ADD
-                room_label_marker.pose.position.x = float(coord[0])
-                room_label_marker.pose.position.y = float(coord[1])
-                room_label_marker.pose.position.z = float(coord[2]) + 0.3
-                room_label_marker.scale.z = 0.1
-                room_label_marker.color.r = 1.0
-                room_label_marker.color.g = 1.0
-                room_label_marker.color.b = 1.0
-                room_label_marker.color.a = 1.0
-                # Updated label to include building name
-                room_label_marker.text = f'{building} - {floors_rooms}'
-                marker_array.markers.append(room_label_marker)
+                # # Room Label Marker
+                # room_label_marker = Marker()
+                # room_label_marker.header.frame_id = 'map'
+                # room_label_marker.header.stamp = self.get_clock().now().to_msg()
+                # room_label_marker.ns = 'campus_map'
+                # room_label_marker.id = len(marker_array.markers)
+                # room_label_marker.type = Marker.TEXT_VIEW_FACING
+                # room_label_marker.action = Marker.ADD
+                # room_label_marker.pose.position.x = float(coord[0])
+                # room_label_marker.pose.position.y = float(coord[1])
+                # room_label_marker.pose.position.z = float(coord[2]) + 0.3
+                # room_label_marker.scale.z = 0.1
+                # room_label_marker.color.r = 1.0
+                # room_label_marker.color.g = 1.0
+                # room_label_marker.color.b = 1.0
+                # room_label_marker.color.a = 1.0
+                # # Updated label to include building name
+                # room_label_marker.text = f'{building} - {floors_rooms}'
+                # marker_array.markers.append(room_label_marker)
 
         # Edges (Connections between locations)
         for idx, (start, end) in enumerate(edges):

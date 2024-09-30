@@ -23,7 +23,7 @@ class CINode(Node):
 
         self.visitor_server = self.create_service(
             Visitor, f'visitor_service_{ID}', self.handle_visitor_request)
-
+        self.pub_timer = self.create_timer(0.1, self.publish)
         self.speed = self.agent.speed
         self.timer = None
         self.setUpMarker()
@@ -96,7 +96,6 @@ class CINode(Node):
             while self.not_equal(next_point, self.coordinates):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
-                self.publish()
                 sleep(0.1)
 
         self.travelCount += 1

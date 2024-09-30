@@ -80,6 +80,8 @@ def main():
     modes = ['car', 'bike', 'walk']
     indices, visitors = get_visitors(campus_map, $v)
     rclpy.init()
+
+    campus_map_publisher = CampusMapPublisher()
 EOT
 
 for i in $(seq 1 30); do
@@ -95,6 +97,7 @@ for i in $(seq 1 $v); do
 done
 
 echo -e '\n    executor = MultiThreadedExecutor()\n' >>'main.py'
+echo -e "    executor.add_node(campus_map_publisher)" >>'main.py'
 
 for i in $(seq 1 30); do
     echo -e "    executor.add_node(bi_node_$i)" >>'main.py'
