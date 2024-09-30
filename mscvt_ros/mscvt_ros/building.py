@@ -83,4 +83,4 @@ class Building:
         residentPaths = {}
         for resident in self.residents:
             residentPaths[resident] = paths[self.residents[resident]]
-        return paths
+        return residentPaths

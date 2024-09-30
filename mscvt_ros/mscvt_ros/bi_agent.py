@@ -14,7 +14,7 @@ class BI_Agent():
         self.Id = ID
         self.meet = {}
         for resident in residentList:
-            self.meet[resident] = None
+            self.meet[resident] = 0
         # path is a dict[key=resident, value=tuple[distance, list[points]]]
         self.path = path
         self.travel_time = None
@@ -27,10 +27,10 @@ class BI_Agent():
         return visitor in self.auth[host]
 
     def isHostFree(self, host: str) -> bool:
-        if self.meet[host] is None:
+        if self.meet[host] == 0:
             return True
         if self.meet[host] <= time.time():
-            self.meet[host] = None
+            self.meet[host] = 0
             return True
         return False
 
@@ -42,25 +42,25 @@ class BI_Agent():
                     self.travel_time = hostPath[0] / 0.5
                     self.meet[host] = time.time() + self.meeting_time + self.travel_time
                     self.logger.info(f'Host {host} is free. Visitor {visitor} can proceed to meet.')
-                    return "GO", 0, hostPath
+                    return "GO", 0.0, hostPath[1]
                 else:
                     remaining_time = self.meet[host] - time.time()
                     self.logger.info(f'Host {host} is busy. Visitor {visitor} needs to wait for {remaining_time:.2f} seconds.')
-                    return "WAIT", remaining_time, []
+                    return "WAIT", float(remaining_time), []
             else:
                 self.logger.warning(f'Visitor {visitor} is unauthorized to meet host {host}.')
-                return "UNAUTHORIZED", 0, []
+                return "UNAUTHORIZED", 0.0, []
         else:
             self.logger.warning(f'Host {host} does not exist.')
-            return "DNE", 0, []
+            return "DNE", 0.0, []
 
     def isOOS(self) -> bool:
-        return self.isHostFree(self.Id)
+        return not self.isHostFree(self.Id)
 
     def OOSHandler(self) -> tuple[str, int, list[None]]:
         remaining_oos_time = self.meet[self.Id] - time.time()
         self.logger.info(f'BI Agent {self.Id} is out of service. Remaining time: {remaining_oos_time:.2f} seconds.')
-        return f"OOS", remaining_oos_time, []
+        return f"OOS", float(remaining_oos_time), []
 
     def run(self, host: str, visitor: str) -> tuple[str, int, list[tuple[float, float, float]]]:
         if self.isOOS():

@@ -60,19 +60,8 @@ def main():
     min_paths = find_min_paths(campus_map.get_adjacency_list(), locations)
 
     modes = ['car', 'bike', 'walk']
-    indices, visitors = get_visitors(campus_map, 5)
+    indices, visitors = get_visitors(campus_map, 1)
     rclpy.init()
-    visitor_node_1 = Visitor_Node(
-        ID=visitors['id'][indices[0]], host=visitors['host'][indices[0]], host_location=visitors['host_location'][indices[0]], marker_id=1)
-    visitor_node_2 = Visitor_Node(
-        ID=visitors['id'][indices[1]], host=visitors['host'][indices[1]], host_location=visitors['host_location'][indices[1]], marker_id=2)
-    visitor_node_3 = Visitor_Node(
-        ID=visitors['id'][indices[2]], host=visitors['host'][indices[2]], host_location=visitors['host_location'][indices[2]], marker_id=3)
-    visitor_node_4 = Visitor_Node(
-        ID=visitors['id'][indices[3]], host=visitors['host'][indices[3]], host_location=visitors['host_location'][indices[3]], marker_id=4)
-    visitor_node_5 = Visitor_Node(
-        ID=visitors['id'][indices[4]], host=visitors['host'][indices[4]], host_location=visitors['host_location'][indices[4]], marker_id=5)
-
     bi_node_1 = BIAgentNode(building=campus_map.building[1], marker_id=1)
     bi_node_2 = BIAgentNode(building=campus_map.building[2], marker_id=2)
     bi_node_3 = BIAgentNode(building=campus_map.building[3], marker_id=3)
@@ -106,24 +95,11 @@ def main():
 
     ci_node_1 = CINode(ID='CI_1', map=min_paths,
                     mode=modes[random.randint(0,2)])
-    ci_node_2 = CINode(ID='CI_2', map=min_paths,
-                    mode=modes[random.randint(0,2)])
-    ci_node_3 = CINode(ID='CI_3', map=min_paths,
-                    mode=modes[random.randint(0,2)])
-    ci_node_4 = CINode(ID='CI_4', map=min_paths,
-                    mode=modes[random.randint(0,2)])
-    ci_node_5 = CINode(ID='CI_5', map=min_paths,
-                    mode=modes[random.randint(0,2)])
-    ci_node_6 = CINode(ID='CI_6', map=min_paths,
-                    mode=modes[random.randint(0,2)])
+
+    visitor_node_1 = Visitor_Node(
+        ID=visitors['id'][indices[0]], host=visitors['host'][indices[0]], host_location=visitors['host_location'][indices[0]], marker_id=1)
 
     executor = MultiThreadedExecutor()
-
-    executor.add_node(visitor_node_1)
-    executor.add_node(visitor_node_2)
-    executor.add_node(visitor_node_3)
-    executor.add_node(visitor_node_4)
-    executor.add_node(visitor_node_5)
 
     executor.add_node(bi_node_1)
     executor.add_node(bi_node_2)
@@ -157,11 +133,8 @@ def main():
     executor.add_node(bi_node_30)
 
     executor.add_node(ci_node_1)
-    executor.add_node(ci_node_2)
-    executor.add_node(ci_node_3)
-    executor.add_node(ci_node_4)
-    executor.add_node(ci_node_5)
-    executor.add_node(ci_node_6)
+
+    executor.add_node(visitor_node_1)
 
     try:
         executor.spin()

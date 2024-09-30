@@ -3,5 +3,5 @@ string hostid
 string ciid
 ---
 string action
-int32 time
+float64 time
 geometry_msgs/Point[] points

@@ -8,6 +8,7 @@ from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
 import rclpy.logging
 
+
 class Visitor_Node(Node):
 
     def __init__(self, host: str, host_location: str, ID: str, marker_id: int):
@@ -16,12 +17,11 @@ class Visitor_Node(Node):
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
         self.setUpMarker(marker_id)
-        self.setClient(host=host, host_location=host_location, ID=ID)
         self.pub = self.create_publisher(Findci, 'need_ci', 1)
-
-        self.timer = self.create_timer(1.0, self.searchForCI)
         self.subs = self.create_subscription(
             Findci, 'ci_reply', self.isCIAvailable, 10)
+
+        self.timer = self.create_timer(3.0, self.searchForCI)
 
     def searchForCI(self):
         if self.agent.ci != '':
@@ -34,23 +34,37 @@ class Visitor_Node(Node):
         self.get_logger().info(f'Searching for CI: {msg.id} : {msg.desc}')
 
     def isCIAvailable(self, msg):
-        if (self.agent.ci !='') and (msg.desc == self.agent.Id):
+        if (self.agent.ci == '') and (msg.desc == self.agent.Id):
             self.agent.ci = msg.id
             self.get_logger().info(f'CI available: {msg.id}')
+            self.setClient()
             self.talkWithCI()
 
     def talkWithCI(self):
         future = self.client.call_async(self.request)
-        if future.done():
-            result = future.result()
-            self.speed = result.speed
-            self.path = result.points
-            msg = Findci()
-            msg.id = self.agent.Id
-            msg.desc = 'GO'
-            self.pub_private.publish(msg)
-            self.get_logger().info(f'Talking with CI, sending message: {msg.id} : {msg.desc}')
-            self.travel()
+        self.get_logger().info(
+            f'Sent request to CI ({self.agent.ci}) by Visitor ({self.agent.Id}).')
+        future.add_done_callback(self.handleCIResponse)
+
+    def handleCIResponse(self, future):
+        result = future.result()
+        self.speed = result.speed
+        self.path = [(p.x, p.y, p.z) for p in result.points]
+        self.get_logger().info(
+            f'Received reply from CI ({self.agent.ci}) at Visitor ({self.agent.Id}):[{self.speed}:{self.path}].')
+        msg = Findci()
+        msg.id = self.agent.Id
+        msg.desc = 'GO'
+        self.pub_private.publish(msg)
+        self.get_logger().info(
+            f'Talking with CI, ready for travel, sending message: {msg.id} : {msg.desc}')
+        self.travel()
+
+    def not_equal(self, a, b):
+        for dim in range(3):
+            if (a[dim] - b[dim] > 1e-1):
+                return True
+        return False
 
     def travel(self):
         for next_point in self.path:
@@ -59,11 +73,11 @@ class Visitor_Node(Node):
             if normalizer == 0:
                 continue
             grad *= (self.speed * 0.5) / normalizer
-            while np.not_equal(next_point, self.coordinates):
+            while self.not_equal(next_point, self.coordinates):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
                 self.publish()
-                sleep(0.5)
+                # sleep(0.1)
 
         self.travelCount += 1
         if self.travelCount == 1:
@@ -92,7 +106,8 @@ class Visitor_Node(Node):
         p.z = self.coordinates[2]
         self.marker.pose.position = p
         self.marker_publisher.publish(self.marker)
-        self.get_logger().info(f'Publishing marker at coordinates: {self.coordinates}')
+        self.get_logger().info(
+            f'Publishing marker at coordinates: {self.coordinates}')
 
     def setUpMarker(self, ID: int):
         self.marker = Marker()
@@ -114,13 +129,13 @@ class Visitor_Node(Node):
         self.publish()
         self.get_logger().info(f'Set up marker with ID: {ID}')
 
-    def setClient(self, ID: str, host: str, host_location: str):
+    def setClient(self):
         self.client = self.create_client(
             Visitor, f'visitor_service_{self.agent.ci}')
         self.request = Visitor.Request()
-        self.request.visitorid = ID
-        self.request.hostid = host
-        self.request.hostlocation = host_location
+        self.request.visitorid = self.agent.Id
+        self.request.hostid = self.agent.host
+        self.request.hostlocation = self.agent.destination
         self.pub_private = self.create_publisher(
             Findci, f'private_{self.agent.ci}_{self.agent.Id}', 10)
         self.get_logger().info(f'Visitor Obtained Client: {self.agent.ci}')

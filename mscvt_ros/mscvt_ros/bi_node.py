@@ -3,6 +3,7 @@ from mscvt_ros.building import Building
 import rclpy
 from rclpy.node import Node
 from mscvt_messages.srv import CIrequest
+from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker
 
 
@@ -15,7 +16,7 @@ class BIAgentNode(Node):
                          building.auth_meetings, building.BI_Id)
         self.setUpMarker(marker_id)
         self.srv = self.create_service(
-            CIrequest, 'ci_request', self.handle_ci_request)
+            CIrequest, f'ci_request_{building.building_name}', self.handle_ci_request)
         self.get_logger().info(
             f"BI Agent ({building.BI_Id}) is ready and waiting for requests.")
         self.get_logger().info(f"Marker ID set to {marker_id} for BI Agent.")
@@ -23,8 +24,12 @@ class BIAgentNode(Node):
     def handle_ci_request(self, request, response):
         self.get_logger().info(
             f"BI Agent ({self.agent.Id}) received request: [Host={request.hostid}:Visitor={request.visitorid}] from CI={request.ciid}")
-        response.action, response.time, response.points = self.agent.run(
+        response.action, response.time, points = self.agent.run(
             host=request.hostid, visitor=request.visitorid)
+        for i in points:
+            p = Point()
+            p.x, p.y, p.z = i[0], i[1], i[2]
+            response.points.append(p)
         self.get_logger().info(
             f"BI Agent ({self.agent.Id}) processed request: [Action={response.action}:Time={response.time}:Points={response.points}]")
         return response
@@ -46,6 +51,8 @@ class BIAgentNode(Node):
         self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
             Marker, f'bi_location_marker_{self.agent.Id}', 10)
-        self.get_logger().info(f"Marker set up for BI Agent ({self.agent.Id}).")
+        self.get_logger().info(
+            f"Marker set up for BI Agent ({self.agent.Id}).")
         self.marker_publisher.publish(self.marker)
-        self.get_logger().info(f"Marker published for BI Agent ({self.agent.Id}).")
+        self.get_logger().info(
+            f"Marker published for BI Agent ({self.agent.Id}).")

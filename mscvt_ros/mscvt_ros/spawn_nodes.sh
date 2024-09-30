@@ -82,10 +82,6 @@ def main():
     rclpy.init()
 EOT
 
-for i in $(seq 1 $v); do
-    echo -e "    visitor_node_$i = Visitor_Node(\n        ID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]], marker_id=$i)" >>'main.py'
-done
-echo >>'main.py'
 for i in $(seq 1 30); do
     echo -e "    bi_node_$i = BIAgentNode(building=campus_map.building[$i], marker_id=$i)" >>'main.py'
 done
@@ -93,19 +89,23 @@ echo >>'main.py'
 for i in $(seq 1 $c); do
     echo -e "    ci_node_$i = CINode(ID='CI_$i', map=min_paths,\n                    mode=modes[random.randint(0,2)])" >>'main.py'
 done
+echo >>'main.py'
+for i in $(seq 1 $v); do
+    echo -e "    visitor_node_$i = Visitor_Node(\n        ID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]], marker_id=$i)" >>'main.py'
+done
 
 echo -e '\n    executor = MultiThreadedExecutor()\n' >>'main.py'
 
-for i in $(seq 1 $v); do
-    echo -e "    executor.add_node(visitor_node_$i)" >>'main.py'
-done
-echo >>'main.py'
 for i in $(seq 1 30); do
     echo -e "    executor.add_node(bi_node_$i)" >>'main.py'
 done
 echo >>'main.py'
 for i in $(seq 1 $c); do
     echo -e "    executor.add_node(ci_node_$i)" >>'main.py'
+done
+echo >>'main.py'
+for i in $(seq 1 $v); do
+    echo -e "    executor.add_node(visitor_node_$i)" >>'main.py'
 done
 
 cat <<EOT >>'main.py'

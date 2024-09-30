@@ -31,6 +31,7 @@ if [[ "$terminal" == "xterm-256color" ]]; then
     source install/local_setup.bash
     cd mscvt_ros/mscvt_ros
     ros2 run mscvt_ros system
+    exec bash
     "
 
     # Terminal for RViz with a larger size and font size
@@ -38,7 +39,7 @@ if [[ "$terminal" == "xterm-256color" ]]; then
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     ros2 run rviz2 rviz2
-    exec bash
+    # exec bash
     "
 else
     sudo apt install gnome-terminal

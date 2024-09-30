@@ -15,18 +15,18 @@ class CINode(Node):
         self.agent = CI_Agent(map=map, ID=ID, mode=mode)
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
+        self.insideBuildingPath = None
         self.sub = self.create_subscription(
             Findci, 'need_ci', self.isMessage, 10)
 
         self.pub = self.create_publisher(Findci, 'ci_reply', 1)
 
         self.visitor_server = self.create_service(
-            Visitor, f'visitor_service_{self.agent.Id}', self.handle_visitor_request)
+            Visitor, f'visitor_service_{ID}', self.handle_visitor_request)
 
-        self.ci_bi_client = self.create_client(
-            CIrequest, f'ci_bi_service_{self.agent.Id}')
         self.speed = self.agent.speed
         self.timer = None
+        self.setUpMarker()
         self.get_logger().info(f"CINode ({ID}) initialized with mode: {mode}.")
 
     def isMessage(self, msg):
@@ -34,7 +34,8 @@ class CINode(Node):
             return
 
         self.agent.visitor = msg.id
-        self.get_logger().info(f"CINode ({self.agent.Id}) received visitor ID: {msg.id}.")
+        self.get_logger().info(
+            f"CINode ({self.agent.Id}) received visitor ID: {msg.id}.")
         return self.isAvailable()
 
     def isAvailable(self):
@@ -42,29 +43,45 @@ class CINode(Node):
         msg.id = self.agent.Id
         msg.desc = self.agent.visitor
         self.pub.publish(msg)
-        self.get_logger().info(f"CINode ({self.agent.Id}) published availability message for visitor: {self.agent.visitor}.")
+        self.get_logger().info(
+            f"CINode ({self.agent.Id}) published availability message for visitor: {self.agent.visitor}.")
 
-    def handle_visitor_request(self, request, response) -> str:
+    def handle_visitor_request(self, request, response):
         if request.hostlocation == 'INSIDE':
             response.speed = self.agent.speed_dict['walk']
-            while self.agent.insideBuildingPath is None:
+            while self.insideBuildingPath is None:
                 i = 0
-            response.points = self.agent.insideBuildingPath
+            response.points = self.insideBuildingPath
             return response
 
-        response.speed, response.points = self.agent.run_visitor(host=request.hostid,
-                                                                 host_location=request.hostlocation,
-                                                                 visitor_id=request.visitorid)
+        response.speed, points = self.agent.run_visitor(host=request.hostid,
+                                                        host_location=request.hostlocation,
+                                                        visitor_id=request.visitorid)
+
+        for i in points:
+            p = Point()
+            p.x, p.y, p.z = i[0], i[1], i[2]
+            response.points.append(p)
         if request.hostlocation != 'Main_Gate':
+            self.ci_bi_client = self.create_client(
+                CIrequest, f'ci_request_{request.hostlocation}')
             self.sub_private = self.create_subscription(
                 Findci, f'private_{self.agent.Id}_{self.agent.visitor}', self.solve, 10)
-        self.get_logger().info(f"CINode ({self.agent.Id}) handled visitor request from host: {request.hostid}.")
+        self.get_logger().info(
+            f"CINode ({self.agent.Id}) handled visitor request [ {request.hostlocation}:{request.hostid}:{request.visitorid}] from visitor.")
         return response
 
     def solve(self, msg):
         if (msg.desc == 'GO') and (msg.id == self.agent.visitor):
-            self.get_logger().info(f"CINode ({self.agent.Id}) received GO message for visitor: {self.agent.visitor}.")
+            self.get_logger().info(
+                f"CINode ({self.agent.Id}) received GO message for visitor: {self.agent.visitor}.")
             self.travel()
+
+    def not_equal(self, a, b):
+        for dim in range(3):
+            if (a[dim] - b[dim] > 1e-1):
+                return True
+        return False
 
     def travel(self):
         for next_point in self.agent.path:
@@ -73,14 +90,15 @@ class CINode(Node):
             if normalizer == 0:
                 continue
             grad *= (self.agent.speed * 0.5) / normalizer
-            while np.not_equal(next_point, self.coordinates):
+            while self.not_equal(next_point, self.coordinates):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
                 self.publish()
-                sleep(0.5)
+                # sleep(0.1)
 
         self.travelCount += 1
-        self.get_logger().info(f"CINode ({self.agent.Id}) has traveled to {self.coordinates}. Travel count: {self.travelCount}.")
+        self.get_logger().info(
+            f"CINode ({self.agent.Id}) has traveled to {self.coordinates}. Travel count: {self.travelCount}.")
         if self.travelCount == 1:
             self.request_bi_service()
         elif self.travelCount == 2:
@@ -97,15 +115,14 @@ class CINode(Node):
             self.agent.path = None
         return
 
-    def request_bi_service(self, visitor_id: str, host_id: str, ciid: str):
+    def request_bi_service(self):
         req = CIrequest.Request()
-        req.visitorid = visitor_id
-        req.hostid = host_id
-        req.ciid = ciid
+        req.visitorid = self.agent.visitor
+        req.hostid = self.agent.host
+        req.ciid = self.agent.Id
 
         future = self.ci_bi_client.call_async(req)
-        if future.done():
-            self.bi_agent_callback()
+        future.add_done_callback(self.bi_agent_callback)
 
     def bi_agent_callback(self, future):
         response = future.result()
@@ -113,14 +130,18 @@ class CINode(Node):
         if response.action == "WAIT":
             self.timer = self.create_timer(
                 response.time, self.request_bi_service())
-            self.get_logger().info(f"CINode ({self.agent.Id}) waiting for BI agent response.")
+            self.get_logger().info(
+                f"CINode ({self.agent.Id}) waiting for BI agent response.")
             return
 
         if response.action == 'GO':
             self.insideBuildingPath = response.points
-            self.agent.path = response.points
-            self.get_logger().info(f"CINode ({self.agent.Id}) received path to travel inside building.")
-            self.travel()
+            print(self.insideBuildingPath)
+            self.agent.path = [(p.x, p.y, p.z)
+                               for p in self.insideBuildingPath]
+            self.get_logger().info(
+                f"CINode ({self.agent.Id}) received path to travel inside building.")
+            return self.travel()
 
         self.travelCount = 3
         self.agent.destination = 'Main_Gate'
@@ -140,7 +161,7 @@ class CINode(Node):
         self.marker = Marker()
         self.marker.header.frame_id = "map"
         self.marker.ns = "ci"
-        self.marker.id = int(self.Id[4:])
+        self.marker.id = int(self.agent.Id[3:])
         self.marker.type = Marker.CYLINDER
         self.marker.action = Marker.ADD
         self.marker.pose.orientation.w = 1.0
@@ -154,4 +175,5 @@ class CINode(Node):
         self.marker_publisher = self.create_publisher(
             Marker, f'ci_location_marker_{self.agent.Id}', 10)
         self.publish()
-        self.get_logger().info(f"CINode ({self.agent.Id}) marker set up and published.")
+        self.get_logger().info(
+            f"CINode ({self.agent.Id}) marker set up and published.")

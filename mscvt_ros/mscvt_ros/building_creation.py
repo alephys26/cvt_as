@@ -25,12 +25,12 @@ class BuildingCreation:
         self.G.add_node(self.building_name)
 
     def create_hostel(self):
-        arr1 = [-0.1, 0.1, 0]
-        arr2 = [0, 0, 0.1]
+        arr1 = [-0.5, 0.5, 0]
+        arr2 = [0, 0, 0.5]
         for floor in range(1, 4):
             floor_node = f'Floor {floor}'
             self.coordinate_building[floor_node] = (
-                self.coordinate[0], self.coordinate[1], floor)
+                self.coordinate[0], self.coordinate[1], float(floor))
             if floor != 1:
                 self.G.add_edge(previous_node, floor_node, weight=1)
             previous_node = floor_node
@@ -38,16 +38,16 @@ class BuildingCreation:
             for room in range(1, 4):
                 room_node = f'F{floor}_R10{room}'
                 self.coordinate_building[room_node] = (
-                    self.coordinate[0]+arr1[room-1], self.coordinate[1]+arr2[room-1], floor)
+                    self.coordinate[0]+arr1[room-1], self.coordinate[1]+arr2[room-1], float(floor))
                 self.G.add_edge(floor_node, room_node, weight=1)
 
     def create_department(self):
-        arr1 = [-0.1, 0.1, 0]
-        arr2 = [0, 0, 0.1]
+        arr1 = [-0.5, 0.5, 0]
+        arr2 = [0, 0, 0.5]
         for floor in range(1, 3):
             floor_node = f'Floor {floor}'
             self.coordinate_building[floor_node] = (
-                self.coordinate[0], self.coordinate[1], floor)
+                self.coordinate[0], self.coordinate[1], float(floor))
             if floor != 1:
                 self.G.add_edge(previous_node, floor_node, weight=1)
             previous_node = floor_node
@@ -55,16 +55,16 @@ class BuildingCreation:
             for room in range(1, 3):
                 room_node = f'F{floor}_R10{room}'
                 self.coordinate_building[room_node] = (
-                    self.coordinate[0]+arr1[room-1], self.coordinate[1]+arr2[room-1], floor)
+                    self.coordinate[0]+arr1[room-1], self.coordinate[1]+arr2[room-1], float(floor))
                 self.G.add_edge(floor_node, room_node, weight=1)
 
     def create_director(self):
         floor_node = 'Floor 1'
         self.coordinate_building[floor_node] = (
-            self.coordinate[0], self.coordinate[1], 1)
+            self.coordinate[0], self.coordinate[1], 1.0)
         room_node = f'F1_R101'
         self.coordinate_building[room_node] = (
-            self.coordinate[0], self.coordinate[1]+0.1, 1)
+            self.coordinate[0], self.coordinate[1]+0.5, 1.0)
         self.G.add_edge(floor_node, room_node, weight=1)
 
     def get_graph(self):
