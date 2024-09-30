@@ -184,9 +184,9 @@ class CINode(Node):
         self.marker.type = Marker.CYLINDER
         self.marker.action = Marker.ADD
         self.marker.pose.orientation.w = 1.0
-        self.marker.scale.x = 0.2
-        self.marker.scale.y = 0.2
-        self.marker.scale.z = 0.2
+        self.marker.scale.x = 1.0
+        self.marker.scale.y = 1.0
+        self.marker.scale.z = 1.0
         self.marker.color.r = 0.0
         self.marker.color.g = 0.0
         self.marker.color.b = 1.0

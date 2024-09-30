@@ -246,7 +246,7 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 70
-  Y: 60
+  X: 100
+  Y: 100
 """
 file.write(final_content)

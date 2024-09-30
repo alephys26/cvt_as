@@ -34,9 +34,9 @@ class CampusMapPublisher(Node):
             marker.pose.position.y = float(pos[1])
             marker.pose.position.z = float(pos[2])
             marker.pose.orientation.w = 1.0
-            marker.scale.x = 0.2
-            marker.scale.y = 0.2
-            marker.scale.z = 0.2
+            marker.scale.x = 1.0
+            marker.scale.y = 1.0
+            marker.scale.z = 1.0
             marker.color.r = 1.0
             marker.color.g = 0.0
             marker.color.b = 0.0
@@ -76,9 +76,9 @@ class CampusMapPublisher(Node):
                 room_marker.pose.position.y = float(coord[1])
                 room_marker.pose.position.z = float(coord[2])
                 room_marker.pose.orientation.w = 1.0
-                room_marker.scale.x = 0.1
-                room_marker.scale.y = 0.1
-                room_marker.scale.z = 0.1
+                room_marker.scale.x = 1.0
+                room_marker.scale.y = 1.0
+                room_marker.scale.z = 1.0
                 room_marker.color.r = 0.68
                 room_marker.color.g = 0.85
                 room_marker.color.b = 0.9
