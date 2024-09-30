@@ -26,10 +26,12 @@ class BIAgentNode(Node):
             f"BI Agent ({self.agent.Id}) received request: [Host={request.hostid}:Visitor={request.visitorid}] from CI={request.ciid}")
         response.action, response.time, points = self.agent.run(
             host=request.hostid, visitor=request.visitorid)
+        print(type(response.action), type(response.time))
         for i in points:
             p = Point()
             p.x, p.y, p.z = i[0], i[1], i[2]
             response.points.append(p)
+        print(type(response.points))
         self.get_logger().info(
             f"BI Agent ({self.agent.Id}) processed request: [Action={response.action}:Time={response.time}:Points={response.points}]")
         return response

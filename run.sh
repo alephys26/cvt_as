@@ -38,7 +38,7 @@ if [[ "$terminal" == "xterm-256color" ]]; then
     xterm -geometry 100x100 -fa 'Monospace' -fs 12 -e bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
-    ros2 run rviz2 rviz2
+    rviz2
     # exec bash
     "
 else
@@ -57,7 +57,7 @@ else
     gnome-terminal --geometry=150x150 -- bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
-    ros2 run rviz2 rviz2
+    rviz2
     exec bash
     " --window-with-profile=Default
 fi

@@ -62,7 +62,7 @@ class Visitor_Node(Node):
 
     def not_equal(self, a, b):
         for dim in range(3):
-            if (a[dim] - b[dim] > 1e-1):
+            if (abs(a[dim] - b[dim]) > 1e-1):
                 return True
         return False
 
@@ -72,7 +72,7 @@ class Visitor_Node(Node):
             normalizer = np.linalg.norm(grad)
             if normalizer == 0:
                 continue
-            grad *= (self.speed * 0.5) / normalizer
+            grad *= (self.speed * 0.1) / normalizer
             while self.not_equal(next_point, self.coordinates):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
@@ -83,20 +83,21 @@ class Visitor_Node(Node):
         if self.travelCount == 1:
             self.request.hostlocation = 'INSIDE'
             self.get_logger().info('Travel Count 1: Requesting CI inside')
+            print("VI",self.coordinates)
             self.talkWithCI()
         elif self.travelCount == 2:
             self.path = self.path[::-1]
             self.get_logger().info('Travel Count 2: Reversing path')
+            print("VI",self.coordinates)
             self.travel()
         elif self.travelCount == 3:
             self.request.hostlocation = 'Main_Gate'
             self.get_logger().info('Travel Count 3: Requesting CI at Main Gate')
+            print("VI",self.coordinates)
             self.talkWithCI()
         else:
             self.marker.action = Marker.DELETE
             self.get_logger().info('Travel complete: Deleting marker and cleaning up')
-            del self.agent
-            del self
 
     def publish(self):
         self.marker.header.stamp = self.get_clock().now().to_msg()
@@ -106,8 +107,6 @@ class Visitor_Node(Node):
         p.z = self.coordinates[2]
         self.marker.pose.position = p
         self.marker_publisher.publish(self.marker)
-        self.get_logger().info(
-            f'Publishing marker at coordinates: {self.coordinates}')
 
     def setUpMarker(self, ID: int):
         self.marker = Marker()
