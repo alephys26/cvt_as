@@ -12,7 +12,7 @@ class CampusMapPublisher(Node):
     def __init__(self):
         super().__init__('campus_map_publisher')
         self.publisher_ = self.create_publisher(MarkerArray, 'campus_map', 10)
-        self.pu
+        self.timer = self.create_timer(1.0, self.publish_map)
         self.map = CampusMap()
         sys.path.append(os.path.abspath(os.path.join(
             os.path.dirname(__file__), '..', '..', 'maps')))
@@ -59,7 +59,7 @@ class CampusMapPublisher(Node):
             label_marker.color.a = 1.0
             label_marker.text = location
             marker_array.markers.append(label_marker)
-        len(marker_array)
+
         for building in self.map.building:
             for floors_rooms, coord in building.graph.coordinate_building.items():
                 room_marker = Marker()
