@@ -8,6 +8,19 @@ class BuildingCreation:
         self.coordinate_building = {}
         self.coordinate = coordinate
         self.G = nx.Graph()
+        self.adjacency_list = {}
+    
+    def get_floors(self):
+        if self.building_type == 'hostel':
+            return 3
+        elif self.building_type == 'dept':
+            return 2
+        elif self.building_type == 'house':
+            return 1
+        elif self.building_type == 'gate':
+            return 0
+        else:
+            print("Invalid building type")
 
     def create_building(self):
         if self.building_type == 'hostel':
@@ -33,9 +46,12 @@ class BuildingCreation:
             floor_node = f'Floor {floor}'
             self.coordinate_building[floor_node] = (
                 self.coordinate[0], self.coordinate[1], float(floor))
-            # if floor != 1:
-            self.G.add_edge(previous_node, floor_node, weight=1)
+            self.G.add_edge(previous_node, floor_node, weight=1)  # Edge to next floor
             previous_node = floor_node
+
+            # Add edge between building and first floor
+            if floor == 1:
+                self.G.add_edge(self.building_name, floor_node, weight=1)
 
             for room in range(1, 4):
                 room_node = f'F{floor}_R10{room}'
@@ -52,9 +68,12 @@ class BuildingCreation:
             floor_node = f'Floor {floor}'
             self.coordinate_building[floor_node] = (
                 self.coordinate[0], self.coordinate[1], float(floor))
-            # if floor != 1:
-            self.G.add_edge(previous_node, floor_node, weight=1)
+            self.G.add_edge(previous_node, floor_node, weight=1)  # Edge to next floor
             previous_node = floor_node
+
+            # Add edge between building and first floor
+            if floor == 1:
+                self.G.add_edge(self.building_name, floor_node, weight=1)
 
             for room in range(1, 3):
                 room_node = f'F{floor}_R10{room}'
@@ -67,7 +86,7 @@ class BuildingCreation:
         floor_node = 'Floor 1'
         self.coordinate_building[floor_node] = (
             self.coordinate[0], self.coordinate[1], 1.0)
-        self.G.add_edge(self.building_name, floor_node, weight=1)
+        self.G.add_edge(self.building_name, floor_node, weight=1)  # Edge to first floor
 
         room_node = f'F1_R101'
         self.coordinate_building[room_node] = (
@@ -82,7 +101,6 @@ class BuildingCreation:
         for node in list(self.G.nodes):
             adjacency_list[node] = {}
             for neighbor in self.G.neighbors(node):
-                # if neighbor!=self.building_name:
                 adjacency_list[node][neighbor] = self.G[node][neighbor]['weight']
 
         return adjacency_list

@@ -20,6 +20,7 @@ class CampusMapPublisher(Node):
     def publish_map(self):
         marker_array = MarkerArray()
 
+        # Publish locations
         for idx, (location, pos) in enumerate(locations.items()):
 
             marker = Marker()
@@ -60,8 +61,10 @@ class CampusMapPublisher(Node):
             label_marker.text = location
             marker_array.markers.append(label_marker)
 
+        # Publish buildings, floors, and rooms
         for building in self.map.building:
-            for floors_rooms, coord in building.graph.coordinate_building.items():
+            first_floor_id = None  # Initialize first floor id
+            for idx, (floor_room, coord) in enumerate(building.graph.coordinate_building.items()):
                 room_marker = Marker()
                 room_marker.header.frame_id = 'map'
                 room_marker.header.stamp = self.get_clock().now().to_msg()
@@ -82,27 +85,115 @@ class CampusMapPublisher(Node):
                 room_marker.color.a = 0.4
                 marker_array.markers.append(room_marker)
 
-                # # Room Label Marker
-                # room_label_marker = Marker()
-                # room_label_marker.header.frame_id = 'map'
-                # room_label_marker.header.stamp = self.get_clock().now().to_msg()
-                # room_label_marker.ns = 'campus_map'
-                # room_label_marker.id = len(marker_array.markers)
-                # room_label_marker.type = Marker.TEXT_VIEW_FACING
-                # room_label_marker.action = Marker.ADD
-                # room_label_marker.pose.position.x = float(coord[0])
-                # room_label_marker.pose.position.y = float(coord[1])
-                # room_label_marker.pose.position.z = float(coord[2]) + 0.3
-                # room_label_marker.scale.z = 0.1
-                # room_label_marker.color.r = 1.0
-                # room_label_marker.color.g = 1.0
-                # room_label_marker.color.b = 1.0
-                # room_label_marker.color.a = 1.0
-                # # Updated label to include building name
-                # room_label_marker.text = f'{building} - {floors_rooms}'
-                # marker_array.markers.append(room_label_marker)
 
-        # Edges (Connections between locations)
+            # Add edges between rooms (within the building)
+            adjacency_list = building.graph.get_adjacency_list()
+            for room, neighbors in adjacency_list.items():
+                for neighbor, weight in neighbors.items():
+                    if room == building.building_name and neighbor in building.graph.coordinate_building:
+                        start_point = building.coordinate
+                        end_point = building.graph.coordinate_building[neighbor]
+
+                        # Create edge marker
+                        line_marker = Marker()
+                        line_marker.header.frame_id = 'map'
+                        line_marker.header.stamp = self.get_clock().now().to_msg()
+                        line_marker.ns = 'campus_map'
+                        line_marker.id = len(marker_array.markers)
+                        line_marker.type = Marker.LINE_STRIP
+                        line_marker.action = Marker.ADD
+                        line_marker.scale.x = 0.025
+                        line_marker.color.r = 0.72  # #B74F1F color (183, 79, 31)
+                        line_marker.color.g = 0.31
+                        line_marker.color.b = 0.12
+                        line_marker.color.a = 1.0
+
+                        # Define points for the edge
+                        point_start = Point()
+                        point_start.x = float(start_point[0])
+                        point_start.y = float(start_point[1])
+                        point_start.z = float(start_point[2])
+
+                        point_end = Point()
+                        point_end.x = float(end_point[0])
+                        point_end.y = float(end_point[1])
+                        point_end.z = float(end_point[2])
+
+                        line_marker.points.append(point_start)
+                        line_marker.points.append(point_end)
+
+                        marker_array.markers.append(line_marker)
+                    
+                    elif neighbor == building.building_name and room in building.graph.coordinate_building:
+                        start_point = building.coordinate
+                        end_point = building.graph.coordinate_building[room]
+
+                        # Create edge marker
+                        line_marker = Marker()
+                        line_marker.header.frame_id = 'map'
+                        line_marker.header.stamp = self.get_clock().now().to_msg()
+                        line_marker.ns = 'campus_map'
+                        line_marker.id = len(marker_array.markers)
+                        line_marker.type = Marker.LINE_STRIP
+                        line_marker.action = Marker.ADD
+                        line_marker.scale.x = 0.025
+                        line_marker.color.r = 0.72  # #B74F1F color (183, 79, 31)
+                        line_marker.color.g = 0.31
+                        line_marker.color.b = 0.12
+                        line_marker.color.a = 1.0
+
+                        # Define points for the edge
+                        point_start = Point()
+                        point_start.x = float(start_point[0])
+                        point_start.y = float(start_point[1])
+                        point_start.z = float(start_point[2])
+
+                        point_end = Point()
+                        point_end.x = float(end_point[0])
+                        point_end.y = float(end_point[1])
+                        point_end.z = float(end_point[2])
+
+                        line_marker.points.append(point_start)
+                        line_marker.points.append(point_end)
+
+                        marker_array.markers.append(line_marker)
+                        
+                    if room in building.graph.coordinate_building and neighbor in building.graph.coordinate_building:
+                        start_point = building.graph.coordinate_building[room]
+                        end_point = building.graph.coordinate_building[neighbor]
+
+                        # Create edge marker
+                        line_marker = Marker()
+                        line_marker.header.frame_id = 'map'
+                        line_marker.header.stamp = self.get_clock().now().to_msg()
+                        line_marker.ns = 'campus_map'
+                        line_marker.id = len(marker_array.markers)
+                        line_marker.type = Marker.LINE_STRIP
+                        line_marker.action = Marker.ADD
+                        line_marker.scale.x = 0.025
+                        line_marker.color.r = 0.72  # #B74F1F color (183, 79, 31)
+                        line_marker.color.g = 0.31
+                        line_marker.color.b = 0.12
+                        line_marker.color.a = 1.0
+
+                        # Define points for the edge
+                        point_start = Point()
+                        point_start.x = float(start_point[0])
+                        point_start.y = float(start_point[1])
+                        point_start.z = float(start_point[2])
+
+                        point_end = Point()
+                        point_end.x = float(end_point[0])
+                        point_end.y = float(end_point[1])
+                        point_end.z = float(end_point[2])
+
+                        line_marker.points.append(point_start)
+                        line_marker.points.append(point_end)
+
+                        marker_array.markers.append(line_marker)
+                    
+
+        # Edges between locations
         for idx, (start, end) in enumerate(edges):
             line_marker = Marker()
             line_marker.header.frame_id = 'map'
