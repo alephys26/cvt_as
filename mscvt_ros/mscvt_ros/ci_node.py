@@ -30,10 +30,11 @@ class CINode(Node):
         self.get_logger().info(f"CINode ({ID}) initialized with mode: {mode}.")
 
     def isMessage(self, msg):
-        if self.agent.visitor is not None:
+        if self.agent.visitor != '':
             return
 
         self.agent.visitor = msg.id
+        print(self.agent.visitor)
         self.get_logger().info(
             f"CINode ({self.agent.Id}) received visitor ID: {msg.id}.")
         return self.isAvailable()
@@ -57,6 +58,7 @@ class CINode(Node):
         response.speed, points = self.agent.run_visitor(host=request.hostid,
                                                         host_location=request.hostlocation,
                                                         visitor_id=request.visitorid)
+        print(self.agent.visitor)
 
         for i in points:
             p = Point()
@@ -107,7 +109,7 @@ class CINode(Node):
             self.agent.destination = 'Main_Gate'
             self.agent.path = self.agent.map[self.agent.destination][1]
             self.travel()
-        else:
+        elif self.travelCount > 3:
             self.travelCount = 0
             self.agent.visitor = None
             self.agent.destination = None

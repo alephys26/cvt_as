@@ -10,7 +10,7 @@ class CI_Agent():
         #     verbose=True
         # )
         self.map = map
-        self.visitor = None
+        self.visitor = ''
         self.destination = None
         self.path = None
         self.Id = ID

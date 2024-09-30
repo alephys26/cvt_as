@@ -25,39 +25,45 @@ terminal=$(echo $TERM)
 if [[ "$terminal" == "xterm-256color" ]]; then
     sudo apt install xterm
 
-    # Terminal for ROS Nodes with a larger size and font size
+    # Terminal for ROS Nodes with a larger size and font size (runs in the background)
     xterm -geometry 100x100 -fa 'Monospace' -fs 12 -e bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     cd mscvt_ros/mscvt_ros
     ros2 run mscvt_ros system
     exec bash
-    "
+    " &  # Run in background
 
-    # Terminal for RViz with a larger size and font size
+    # Terminal for RViz with a larger size and font size (runs in the background)
     xterm -geometry 100x100 -fa 'Monospace' -fs 12 -e bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     rviz2
-    # exec bash
-    "
+    exec bash
+    " &  # Run in background
+
 else
     sudo apt install gnome-terminal
 
-    # Terminal for ROS Nodes with a larger size and font size
+    # Terminal for ROS Nodes with a larger size and font size (runs in the background)
     gnome-terminal --geometry=100x100 -- bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     cd mscvt_ros/mscvt_ros
     ros2 run mscvt_ros system
     exec bash
-    " --window-with-profile=Default
+    " --window-with-profile=Default &  # Run in background
 
-    # Terminal for RViz with a larger size and font size
+    # Terminal for RViz with a larger size and font size (runs in the background)
     gnome-terminal --geometry=150x150 -- bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
     rviz2
     exec bash
-    " --window-with-profile=Default
+    " --window-with-profile=Default &  # Run in background
 fi
+
+# Wait for both background processes to finish
+wait
+
+echo "Both ROS nodes and RViz have finished."
