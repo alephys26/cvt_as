@@ -38,6 +38,7 @@ if [[ "$terminal" == "xterm-256color" ]]; then
     xterm -geometry 100x100 -fa 'Monospace' -fs 12 -e bash -c "
     source /opt/ros/iron/setup.bash
     source install/local_setup.bash
+    ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 map base_link
     rviz2
     exec bash
     " &  # Run in background

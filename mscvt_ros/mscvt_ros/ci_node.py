@@ -97,7 +97,7 @@ class CINode(Node):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
                 self.publish()
-                # sleep(0.1)
+                sleep(0.1)
 
         self.travelCount += 1
         self.get_logger().info(

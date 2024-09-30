@@ -51,6 +51,9 @@ class BIAgentNode(Node):
         self.marker.color.g = 1.0
         self.marker.color.b = 0.0
         self.marker.color.a = 0.5
+        self.marker.pose.position.x = self.coordinates[0]
+        self.marker.pose.position.y = self.coordinates[1]
+        self.marker.pose.position.z = self.coordinates[2]
         self.marker_publisher = self.create_publisher(
             Marker, f'bi_location_marker_{self.agent.Id}', 10)
         self.get_logger().info(
