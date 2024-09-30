@@ -120,6 +120,7 @@ class CINode(Node):
                 self.travelCount = 0
                 self.agent.visitor = None
                 self.agent.destination = None
+                self.insideBuildingPath = None
                 self.agent.path = None
                 self.cleared = False
         return
