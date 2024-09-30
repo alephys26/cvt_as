@@ -120,8 +120,8 @@ class Visitor_Node(Node):
         self.marker.scale.y = 0.2
         self.marker.scale.z = 0.2
         self.marker.color.r = 1.0
-        self.marker.color.g = 0.0
-        self.marker.color.b = 0.0
+        self.marker.color.g = 0.72
+        self.marker.color.b = 0.76
         self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
             Marker, f'visitor_location_marker_{self.agent.Id}', 10)
