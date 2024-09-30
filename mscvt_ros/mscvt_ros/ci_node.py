@@ -16,6 +16,7 @@ class CINode(Node):
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
         self.insideBuildingPath = None
+        self.expected_time = 5
         self.sub = self.create_subscription(
             Findci, 'need_ci', self.isMessage, 10)
 
@@ -31,21 +32,20 @@ class CINode(Node):
         self.get_logger().info(f"CINode ({ID}) initialized with mode: {mode}.")
 
     def isMessage(self, msg):
-        if self.agent.visitor is not None:
+        if self.agent.visitor != None:
             return
 
-        self.agent.visitor = msg.id
         self.get_logger().info(
             f"CINode ({self.agent.Id}) received visitor ID: {msg.id}.")
-        return self.isAvailable()
+        return self.isAvailable(msg.id)
 
-    def isAvailable(self):
+    def isAvailable(self, id):
         msg = Findci()
         msg.id = self.agent.Id
-        msg.desc = self.agent.visitor
+        msg.desc = id
         self.pub.publish(msg)
         self.get_logger().info(
-            f"CINode ({self.agent.Id}) published availability message for visitor: {self.agent.visitor}.")
+            f"CINode ({self.agent.Id}) published availability message for visitor: {id}.")
 
     def handle_visitor_request(self, request, response):
         if request.hostlocation == 'INSIDE':
@@ -53,7 +53,9 @@ class CINode(Node):
             if self.insideBuildingPath is not None:
                 response.points = self.insideBuildingPath
             else:
-                response.points = []
+                p = Point()
+                p.x,p.y,p.z=0.0,0.0,0.0
+                response.points = [p]
             self.get_logger().info(
                 f"CINode ({self.agent.Id}) handled visitor request [ {request.hostlocation}:{request.hostid}:{request.visitorid}] from visitor.")
             return response
@@ -81,7 +83,8 @@ class CINode(Node):
         return response
 
     def startTravel(self, msg):
-        if (msg.desc == 'GO') and (msg.id == self.agent.visitor):
+        if (msg.desc == 'GO'):
+            self.waiting_time = float(msg.id)
             self.get_logger().info(
                 f"CINode ({self.agent.Id}) received GO message for visitor: {self.agent.visitor}.")
             self.travel()
@@ -111,11 +114,16 @@ class CINode(Node):
         if self.travelCount == 1:
             self.request_bi_service()
         elif self.travelCount == 2:
+            sleep(self.waiting_time)
+            if(self.waiting_time >= self.expected_time):
+                if self.agent.host[-7:] == 'F1_R101':
+                    self.get_logger().warning(f"BI ({self.agent.host}) has time violation.")
+                else:
+                    self.get_logger().warning(f"Visitor ({self.agent.visitor}) has time violation.")
             self.agent.path = self.agent.path[::-1]
             self.travel()
         elif self.travelCount == 3:
             self.agent.path = self.agent.map[self.agent.destination][1][::-1]
-            self.travel()
         else:
             if self.cleared:
                 self.travelCount = 0

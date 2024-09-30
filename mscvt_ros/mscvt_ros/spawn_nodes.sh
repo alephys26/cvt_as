@@ -26,6 +26,7 @@ from mscvt_ros.visitor_node import Visitor_Node
 from mscvt_ros.campus_map_publisher import CampusMapPublisher
 from mscvt_ros.network_graph import CampusMap
 from rclpy.executors import MultiThreadedExecutor
+from mscvt_ros.spawnned_visitors import visitors, indices
 
 
 def find_min_paths(adjacency_list, locations):
@@ -56,29 +57,12 @@ def find_min_paths(adjacency_list, locations):
     return result
 
 
-def get_visitors(campus_map, n_visitors):
-    visitors_auth = {
-        'id': [],
-        'host': [],
-        'host_location': []
-    }
-    for building in campus_map.building:
-        visitors_auth['id'] += building.visitors['id']
-        visitors_auth['host'] += building.visitors['host']
-        visitors_auth['host_location'] += building.visitors['host_location']
-
-    n_visitors = min(n_visitors, len(visitors_auth['host']))
-    indices = random.sample(range(len(visitors_auth['host'])), n_visitors)
-
-    return indices, visitors_auth
-
-
 def main():
     campus_map = CampusMap()
     min_paths = find_min_paths(campus_map.get_adjacency_list(), locations)
 
     modes = ['car', 'bike', 'walk']
-    indices, visitors = get_visitors(campus_map, $v)
+
     rclpy.init()
 
     campus_map_publisher = CampusMapPublisher()
@@ -93,8 +77,10 @@ for i in $(seq 1 $c); do
 done
 echo >>'main.py'
 for i in $(seq 1 $v); do
-    echo -e "    visitor_node_$i = Visitor_Node(\n        ID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]], marker_id=$i)" >>'main.py'
+    echo -e "    visitor_node_$i = Visitor_Node(\n        ID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]], marker_id=$i, meeting_time=visitors['meeting_time'][indices[$((i - 1))]])" >>'main.py'
 done
+echo -e "    visitor_node_$((v+1)) = Visitor_Node(\n        ID='Bandit', host=visitors['host'][9], host_location=visitors['host_location'][1], marker_id=$((v+1)), meeting_time=5)" >>'main.py'
+echo -e "    visitor_node_$((v+2)) = Visitor_Node(\n        ID=visitors['id'][1], host=visitors['host'][15], host_location=visitors['host_location'][15], marker_id=$((v+2)), meeting_time=5)" >>'main.py'
 
 echo -e '\n    executor = MultiThreadedExecutor()\n' >>'main.py'
 echo -e "    executor.add_node(campus_map_publisher)" >>'main.py'
@@ -107,7 +93,7 @@ for i in $(seq 1 $c); do
     echo -e "    executor.add_node(ci_node_$i)" >>'main.py'
 done
 echo >>'main.py'
-for i in $(seq 1 $v); do
+for i in $(seq 1 $((v+2))); do
     echo -e "    executor.add_node(visitor_node_$i)" >>'main.py'
 done
 

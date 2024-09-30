@@ -11,11 +11,12 @@ import rclpy.logging
 
 class Visitor_Node(Node):
 
-    def __init__(self, host: str, host_location: str, ID: str, marker_id: int):
+    def __init__(self, host: str, host_location: str, ID: str, marker_id: int, meeting_time: int):
         super().__init__(ID)
         self.agent = vi(host, host_location, ID)
         self.travelCount = 0
         self.coordinates = (0.0, 0.0, 0.0)
+        self.meeting_time = meeting_time
         self.setUpMarker(marker_id)
         self.pub = self.create_publisher(Findci, 'need_ci', 1)
         self.subs = self.create_subscription(
@@ -47,17 +48,26 @@ class Visitor_Node(Node):
             f'Sent request to CI ({self.agent.ci}) by Visitor ({self.agent.Id}).')
         future.add_done_callback(self.handleCIResponse)
 
+    def checkNull(self, points):
+        p = points[0]
+        return p.x == 0.0 and p.y == 0.0 and p.z == 0.0
+
     def handleCIResponse(self, future):
         result = future.result()
-        if len(result.points)==0:
+        if len(result.points) == 1 and self.checkNull(result.points):
             sleep(1.0)
             return self.talkWithCI()
-        self.speed = result.speed
+        if len(result.points) == 0:
+            self.travelCount = 3
+            self.request.hostlocation = 'Main_Gate'
+            self.get_logger().info('Travel Count 3: Requesting CI at Main Gate')
+            return self.talkWithCI()
         self.path = [(p.x, p.y, p.z) for p in result.points]
+        self.speed = result.speed
         self.get_logger().info(
             f'Received reply from CI ({self.agent.ci}) at Visitor ({self.agent.Id}):[{self.speed}:{self.path}].')
         msg = Findci()
-        msg.id = self.agent.Id
+        msg.id = str(self.meeting_time)
         msg.desc = 'GO'
         self.pub_private.publish(msg)
         self.get_logger().info(
@@ -88,6 +98,7 @@ class Visitor_Node(Node):
             self.get_logger().info('Travel Count 1: Requesting CI inside')
             self.talkWithCI()
         elif self.travelCount == 2:
+            sleep(self.meeting_time)
             self.path = self.path[::-1]
             self.get_logger().info('Travel Count 2: Reversing path')
             self.travel()
@@ -137,4 +148,4 @@ class Visitor_Node(Node):
         self.request.hostlocation = self.agent.destination
         self.pub_private = self.create_publisher(
             Findci, f'private_{self.agent.ci}_{self.agent.Id}', 10)
-        self.get_logger().info(f'Visitor Obtained Client: {self.agent.ci}')
+        self.get_logger().info(f'Visitor Obtained CI: {self.agent.ci}')
