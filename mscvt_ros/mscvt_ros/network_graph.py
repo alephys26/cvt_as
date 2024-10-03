@@ -1,6 +1,6 @@
 import networkx as nx
-import matplotlib.pyplot as plt
-from building import Building
+from mscvt_ros.building import Building
+from mscvt_ros.coordinates import locations
 
 
 class CampusMap:
@@ -14,18 +14,6 @@ class CampusMap:
     def add_path(self, from_location, to_location, weight=1):
         self.graph.add_edge(from_location, to_location, weight=weight)
 
-    def visualize_map(self):
-        pos = nx.spring_layout(self.graph)
-        edge_labels = nx.get_edge_attributes(self.graph, 'weight')
-
-        # Draw the main campus map
-        nx.draw(self.graph, pos, with_labels=True, node_size=700,
-                node_color='skyblue', font_size=10, font_weight='bold')
-        nx.draw_networkx_edge_labels(
-            self.graph, pos, edge_labels=edge_labels, font_color='red')
-
-        plt.show()
-
     def get_adjacency_list(self):
         adjacency_list = {}
         for node in list(self.graph.nodes):
@@ -37,38 +25,41 @@ class CampusMap:
 
     def create_campus_map(self):
 
-        main_gate = Building("Main Gate", "gate")
-        office = Building("Office", "dept")
-        library = Building("Library", "dept")
-        data_center = Building("Data Center", "dept")
-        lhc = Building("LHC", "dept")
-        blb = Building("BLB", "dept")
-        cse_dept = Building("CSE", "dept")
-        bio_dept = Building("BIO", "dept")
-        chemical_dept = Building("Chemical", "dept")
-        electrical_dept = Building("Electrical", "dept")
-        civil_dept = Building("Civil", "dept")
-        mechanical_dept = Building("Mechanical", "dept")
-        physics_dept = Building("Physics", "dept")
-        sola = Building("SOLA", "dept")
-        sme = Building("SME", "dept")
-        material_dept = Building("Material Science", "dept")
-        I2 = Building("I2", "hostel")
-        I3 = Building("I3", "hostel")
-        B1 = Building("B1", "hostel")
-        B2 = Building("B2", "hostel")
-        B3 = Building("B3", "hostel")
-        B4 = Building("B4", "hostel")
-        B5 = Building("B5", "hostel")
-        old_mess = Building("Old Mess", "dept")
-        G1 = Building("G1", "hostel")
-        G2 = Building("G2", "hostel")
-        G3 = Building("G3", "hostel")
-        G4 = Building("G4", "hostel")
-        G5 = Building("G5", "hostel")
-        G6 = Building("G6", "hostel")
-        director_house = Building("Director House", "house")
-        faculty_quarters = Building("Faculty Quarters", "hostel")
+        main_gate = Building('Main_Gate', 'gate', locations['Main_Gate'])
+        office = Building('Office', 'dept', locations['Office'])
+        library = Building('Library', 'dept', locations['Library'])
+        data_center = Building('Data_Center', 'dept', locations['Data_Center'])
+        lhc = Building('LHC', 'dept', locations['LHC'])
+        blb = Building('BLB', 'dept', locations['BLB'])
+        cse_dept = Building('CSE', 'dept', locations['CSE'])
+        bio_dept = Building('BIO', 'dept', locations['BIO'])
+        chemical_dept = Building('Chemical', 'dept', locations['Chemical'])
+        electrical_dept = Building(
+            'Electrical', 'dept', locations['Electrical'])
+        civil_dept = Building('Civil', 'dept', locations['Civil'])
+        mechanical_dept = Building(
+            'Mechanical', 'dept', locations['Mechanical'])
+        physics_dept = Building('Physics', 'dept', locations['Physics'])
+        sola = Building('SOLA', 'dept', locations['SOLA'])
+        sme = Building('SME', 'dept', locations['SME'])
+        I2 = Building('I2', 'hostel', locations['I2'])
+        I3 = Building('I3', 'hostel', locations['I3'])
+        B1 = Building('B1', 'hostel', locations['B1'])
+        B2 = Building('B2', 'hostel', locations['B2'])
+        B3 = Building('B3', 'hostel', locations['B3'])
+        B4 = Building('B4', 'hostel', locations['B4'])
+        B5 = Building('B5', 'hostel', locations['B5'])
+        old_mess = Building('Old_Mess', 'dept', locations['Old_Mess'])
+        G1 = Building('G1', 'hostel', locations['G1'])
+        G2 = Building('G2', 'hostel', locations['G2'])
+        G3 = Building('G3', 'hostel', locations['G3'])
+        G4 = Building('G4', 'hostel', locations['G4'])
+        G5 = Building('G5', 'hostel', locations['G5'])
+        G6 = Building('G6', 'hostel', locations['G6'])
+        director_house = Building(
+            'Director_House', 'house', locations['Director_House'])
+        faculty_quarters = Building(
+            'Faculty_Quarters', 'hostel', locations['Faculty_Quarters'])
 
         self.building = [
             main_gate,
@@ -86,7 +77,6 @@ class CampusMap:
             physics_dept,
             sola,
             sme,
-            material_dept,
             I2,
             I3,
             B1,
@@ -105,7 +95,6 @@ class CampusMap:
             faculty_quarters
         ]
 
-
         self.add_location(main_gate.building_name)
         self.add_location(office.building_name)
         self.add_location(library.building_name)
@@ -121,7 +110,6 @@ class CampusMap:
         self.add_location(physics_dept.building_name)
         self.add_location(sola.building_name)
         self.add_location(sme.building_name)
-        self.add_location(material_dept.building_name)
         self.add_location(I2.building_name)
         self.add_location(I3.building_name)
         self.add_location(B1.building_name)
@@ -167,9 +155,6 @@ class CampusMap:
                       mechanical_dept.building_name, weight=1)
         self.add_path(mechanical_dept.building_name,
                       sola.building_name, weight=1)
-        self.add_path(mechanical_dept.building_name,
-                      material_dept.building_name, weight=1)
-        self.add_path(material_dept.building_name, sme.building_name, weight=1)
 
         self.add_path(main_gate.building_name, I2.building_name, weight=10)
         self.add_path(I2.building_name, I3.building_name, weight=1)

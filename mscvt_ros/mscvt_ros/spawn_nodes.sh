@@ -11,25 +11,26 @@ if [ $v -le 0 ]; then
     exit 1
 fi
 if [ $c -le 0 ]; then
-    echo "$v is incorrect, have some positive number of visitors."
+    echo "$c is incorrect, have some positive number of CI agents."
     exit 1
 fi
 
-cat <<EOT >>''main.py''
+cat <<EOT >>'main.py'
 import heapq
 import rclpy
 import random
-from mscvt.maps.coordinates import locations
-from bi_node import BIAgentNode
-from ci_node import CINode
-from visitor_node import Visitor_Node
-from campus_map_publisher import CampusMapPublisher
-from mscvt.maps.network_graph import CampusMap
-from rclpy.executor import MultiThreadExecutor
+from mscvt_ros.coordinates import locations
+from mscvt_ros.bi_node import BIAgentNode
+from mscvt_ros.ci_node import CINode
+from mscvt_ros.visitor_node import Visitor_Node
+from mscvt_ros.campus_map_publisher import CampusMapPublisher
+from mscvt_ros.network_graph import CampusMap
+from rclpy.executors import MultiThreadedExecutor
+from mscvt_ros.spawnned_visitors import visitors, indices
 
 
 def find_min_paths(adjacency_list, locations):
-    start_node = "Main Gate"
+    start_node = "Main_Gate"
     min_path_sum = {node: float('inf') for node in adjacency_list}
     min_path_sum[start_node] = 0
     priority_queue = [(0, start_node)]
@@ -56,53 +57,44 @@ def find_min_paths(adjacency_list, locations):
     return result
 
 
-def get_visitors(campus_map, n_visitors):
-    visitors_auth = {}
-    for building in campus_map.building:
-        visitors_auth['id'] += building.visitors['id']
-        visitors_auth['host'] += building.visitors['host']
-        visitors_auth['host_location'] += building.visitors['host_location']
-
-    n_visitors = min(n_visitors, len(visitors_auth['host']))
-    indices = random.sample(range(len(visitors_auth['host'])), n_visitors)
-
-    return indices, visitors_auth
-
-
 def main():
     campus_map = CampusMap()
     min_paths = find_min_paths(campus_map.get_adjacency_list(), locations)
 
     modes = ['car', 'bike', 'walk']
-    indices, visitors = get_visitors(campus_map, $v)
 
+    rclpy.init()
 
+    campus_map_publisher = CampusMapPublisher()
 EOT
 
-for i in $(seq 1 $v); do
-    echo -e "\tvisitor_node_$i = Visitor_Node(\n\t\tID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]])" >>'main.py'
+for i in $(seq 1 30); do
+    echo -e "    bi_node_$i = BIAgentNode(building=campus_map.building[$i], marker_id=$i)" >>'main.py'
 done
-echo >> 'main.py'
-for i in $(seq 1 32); do
-    echo -e "\tbi_node_$i = BIAgentNode(campus_map.building[$((i - 1))])" >>'main.py'
-done
-echo >> 'main.py'
+echo >>'main.py'
 for i in $(seq 1 $c); do
-    echo -e "\tci_node_$i = CINode(ID='CI_$i', map=min_paths,\n\t\t\t\t\tmode=modes[random.randint(0,2)])" >>'main.py'
+    echo -e "    ci_node_$i = CINode(ID='CI_$i', map=min_paths,\n                    mode=modes[random.randint(0,2)])" >>'main.py'
 done
-
-echo -e '\n\texecutor = MultiThreadExecutor()\n' >>'main.py'
-
+echo >>'main.py'
 for i in $(seq 1 $v); do
-    echo -e "\texecutor.add_node(visitor_node_$i)" >>'main.py'
+    echo -e "    visitor_node_$i = Visitor_Node(\n        ID=visitors['id'][indices[$((i - 1))]], host=visitors['host'][indices[$((i - 1))]], host_location=visitors['host_location'][indices[$((i - 1))]], marker_id=$i, meeting_time=visitors['meeting_time'][indices[$((i - 1))]])" >>'main.py'
 done
-echo >> 'main.py'
-for i in $(seq 1 32); do
-    echo -e "\texecutor.add_node(bi_node_$i)" >>'main.py'
+echo -e "    visitor_node_$((v+1)) = Visitor_Node(\n        ID='Bandit', host=visitors['host'][9], host_location=visitors['host_location'][1], marker_id=$((v+1)), meeting_time=5)" >>'main.py'
+echo -e "    visitor_node_$((v+2)) = Visitor_Node(\n        ID=visitors['id'][1], host=visitors['host'][15], host_location=visitors['host_location'][15], marker_id=$((v+2)), meeting_time=5)" >>'main.py'
+
+echo -e '\n    executor = MultiThreadedExecutor()\n' >>'main.py'
+echo -e "    executor.add_node(campus_map_publisher)" >>'main.py'
+
+for i in $(seq 1 30); do
+    echo -e "    executor.add_node(bi_node_$i)" >>'main.py'
 done
-echo >> 'main.py'
+echo >>'main.py'
 for i in $(seq 1 $c); do
-    echo -e "\texecutor.add_node(ci_node_$i)" >>'main.py'
+    echo -e "    executor.add_node(ci_node_$i)" >>'main.py'
+done
+echo >>'main.py'
+for i in $(seq 1 $((v+2))); do
+    echo -e "    executor.add_node(visitor_node_$i)" >>'main.py'
 done
 
 cat <<EOT >>'main.py'

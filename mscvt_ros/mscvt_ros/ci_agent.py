@@ -1,13 +1,14 @@
-from crewai import Agent
+# from crewai import Agent
 
-class CI_Agent(Agent):
+class CI_Agent():
     def __init__(self, map, ID: str, mode: str):
-        super().__init__(
-            role='Campus Incharge',
-            goal="To facilitate visitors to meet their intended host inside the campus from main gate to host's location.",
-            memory=True,
-            verbose=True
-        )
+        # super().__init__(
+        #     role='Campus Incharge',
+        #     goal="To facilitate visitors to meet their intended host inside the campus from main gate to host's location.",
+        #     backstory='An experienced campus guide, responsible for helping visitors navigate from the entrance to their destination.',
+        #     memory=True,
+        #     verbose=True
+        # )
         self.map = map
         self.visitor = None
         self.destination = None
