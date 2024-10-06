@@ -87,8 +87,6 @@ class CINode(Node):
             self.waiting_time = float(msg.id)
             self.get_logger().info(
                 f"CINode ({self.agent.Id}) received GO message for visitor: {self.agent.visitor}.")
-            if (self.travelCount == 3):
-                sleep(self.waiting_time)
             self.travel()
 
     def not_equal(self, a, b):
