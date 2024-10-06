@@ -110,5 +110,3 @@ cat <<EOT >>'main.py'
 if __name__ == '__main__':
     main()
 EOT
-
-echo "$v visitors and $c Campus Incharges code has been added to 'main.py'."
