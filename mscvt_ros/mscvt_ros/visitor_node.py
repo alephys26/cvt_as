@@ -90,7 +90,7 @@ class Visitor_Node(Node):
             while self.not_equal(next_point, self.coordinates):
                 self.coordinates = tuple(
                     np.add(self.coordinates, grad).tolist())
-                sleep(0.2)
+                sleep(0.1)
 
         self.travelCount += 1
         if self.travelCount == 1:
