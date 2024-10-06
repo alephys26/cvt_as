@@ -23,6 +23,8 @@ class Visitor_Node(Node):
             Findci, 'ci_reply', self.isCIAvailable, 10)
 
         self.timer = self.create_timer(3.0, self.searchForCI)
+
+        self.get_logger().info(f'Searching for CI: {self.agent.Id} : TAKEME')
         self.pub_timer = self.create_timer(0.2, self.publish)
 
     def searchForCI(self):
@@ -33,7 +35,6 @@ class Visitor_Node(Node):
         msg.id = self.agent.Id
         msg.desc = 'TAKEME'
         self.pub.publish(msg)
-        self.get_logger().info(f'Searching for CI: {msg.id} : {msg.desc}')
 
     def isCIAvailable(self, msg):
         if (self.agent.ci == '') and (msg.desc == self.agent.Id):
@@ -62,11 +63,10 @@ class Visitor_Node(Node):
             sleep(1.0)
             return self.talkWithCI()
         if len(result.points) == 0:
-            self.travelCount = 3
-            self.request.hostlocation = 'Main_Gate'
-            self.get_logger().info('Travel Count 3: Requesting CI at Main Gate')
-            return self.talkWithCI()
-        self.path = [(p.x, p.y, p.z) for p in result.points]
+            self.path = self.path[::-1]
+            self.travelCount += 2
+        else:
+            self.path = [(p.x, p.y, p.z) for p in result.points]
         self.speed = result.speed
         self.get_logger().info(
             f'Received reply from CI ({self.agent.ci}) at Visitor ({self.agent.Id}):[{self.speed}:{self.path}].')
@@ -116,6 +116,7 @@ class Visitor_Node(Node):
         else:
             self.marker.action = Marker.DELETE
             self.get_logger().info('Travel complete: Deleting marker and cleaning up')
+            del self
 
     def publish(self):
         self.marker.header.stamp = self.get_clock().now().to_msg()

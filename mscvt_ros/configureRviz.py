@@ -123,7 +123,7 @@ indices = {ind}
 """
 code_file.write(code)
 
-for i in range(auth_visitors_count):
+for i in range(auth_visitors_count+1):
     visitor_content = f"""
     - Class: rviz_default_plugins/Marker
       Enabled: true

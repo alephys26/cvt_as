@@ -53,7 +53,10 @@ class CINode(Node):
             response.points = []
             return response
         if request.hostlocation == 'INSIDE':
-            response.speed = self.agent.speed_dict['walk']
+            if self.insideBuildingPath == []:
+                response.speed = self.agent.speed
+            else:
+                response.speed = self.agent.speed_dict['walk']
             if self.insideBuildingPath is not None:
                 response.points = self.insideBuildingPath
             else:
@@ -141,6 +144,7 @@ class CINode(Node):
                 self.agent.destination = None
                 self.insideBuildingPath = None
                 self.agent.path = None
+                self.agent.host = None
                 self.cleared = False
         return
 
@@ -172,10 +176,11 @@ class CINode(Node):
             self.get_logger().info(
                 f"CINode ({self.agent.Id}) received path to travel inside building.")
             return
-
-        self.travelCount = 3
-        self.agent.path = self.agent.map[self.agent.destination][1][::-1]
-        self.travel()
+        
+        self.agent.path = self.agent.path[::-1]
+        self.travelCount += 2
+        self.insideBuildingPath = response.points
+        self.cleared = True
 
     def publish(self):
         self.marker.header.stamp = self.get_clock().now().to_msg()
