@@ -54,7 +54,7 @@ class CINode(Node):
                 response.points = self.insideBuildingPath
             else:
                 p = Point()
-                p.x,p.y,p.z=0.0,0.0,0.0
+                p.x, p.y, p.z = 0.0, 0.0, 0.0
                 response.points = [p]
             self.get_logger().info(
                 f"CINode ({self.agent.Id}) handled visitor request [ {request.hostlocation}:{request.hostid}:{request.visitorid}] from visitor.")
@@ -87,6 +87,8 @@ class CINode(Node):
             self.waiting_time = float(msg.id)
             self.get_logger().info(
                 f"CINode ({self.agent.Id}) received GO message for visitor: {self.agent.visitor}.")
+            if (self.travelCount == 3):
+                sleep(self.waiting_time)
             self.travel()
 
     def not_equal(self, a, b):
@@ -115,11 +117,13 @@ class CINode(Node):
             self.request_bi_service()
         elif self.travelCount == 2:
             sleep(self.waiting_time)
-            if(self.waiting_time >= self.expected_time):
+            if (self.waiting_time >= self.expected_time):
                 if self.agent.host[-7:] == 'F1_R101':
-                    self.get_logger().warning(f"BI ({self.agent.host}) has time violation.")
+                    self.get_logger().warning(
+                        f"BI ({self.agent.host}) has time violation.")
                 else:
-                    self.get_logger().warning(f"Visitor ({self.agent.visitor}) has time violation.")
+                    self.get_logger().warning(
+                        f"Visitor ({self.agent.visitor}) has time violation.")
             self.agent.path = self.agent.path[::-1]
             self.travel()
         elif self.travelCount == 3:
