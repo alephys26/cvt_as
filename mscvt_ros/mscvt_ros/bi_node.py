@@ -41,15 +41,15 @@ class BIAgentNode(Node):
         self.marker.header.frame_id = 'map'
         self.marker.ns = 'building_incharge'
         self.marker.id = ID
-        self.marker.type = Marker.CUBE
+        self.marker.type = Marker.SPHERE
         self.marker.action = Marker.ADD
         self.marker.pose.orientation.w = 1.0
-        self.marker.scale.x = 0.7
-        self.marker.scale.y = 0.7
-        self.marker.scale.z = 0.7
+        self.marker.scale.x = 0.5
+        self.marker.scale.y = 0.5
+        self.marker.scale.z = 0.5
         self.marker.color.r = 0.0
-        self.marker.color.g = 1.0
-        self.marker.color.b = 0.0
+        self.marker.color.g = 0.3
+        self.marker.color.b = 0.8
         self.marker.color.a = 0.5
         self.marker_publisher = self.create_publisher(
             Marker, f'bi_location_marker_{self.agent.Id}', 10)

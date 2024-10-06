@@ -1,44 +1,47 @@
 scale_factor = 1.0
 
 locations = {
+    # Main Gate
     'Main_Gate': (0 / scale_factor, 0 / scale_factor, 0 / scale_factor),
-    'Office': (8 / scale_factor, 6 / scale_factor, 0 / scale_factor),
-    'Library': (11 / scale_factor, 10 / scale_factor, 0 / scale_factor),
-    'Data_Center': (11 / scale_factor, 11 / scale_factor, 0 / scale_factor),
-    'LHC': (15 / scale_factor, 11 / scale_factor, 0 / scale_factor),
-    'CSE': (15 / scale_factor, 12 / scale_factor, 0 / scale_factor),
-    'BLB': (16 / scale_factor, 12 / scale_factor, 0 / scale_factor),
-    'BIO': (15 / scale_factor, 13 / scale_factor, 0 / scale_factor),
-    'Chemical': (16 / scale_factor, 13 / scale_factor, 0 / scale_factor),
-    'Civil': (16 / scale_factor, 14 / scale_factor, 0 / scale_factor),
+
+    # Administrative and Academic Buildings
+    'Office': (5 / scale_factor, 7 / scale_factor, 0 / scale_factor),
+    'Library': (7 / scale_factor, 8 / scale_factor, 0 / scale_factor),
+    'Data_Center': (8 / scale_factor, 9 / scale_factor, 0 / scale_factor),
+    'LHC': (10 / scale_factor, 9 / scale_factor, 0 / scale_factor),
+    'CSE': (11 / scale_factor, 10 / scale_factor, 0 / scale_factor),
+    'BLB': (12 / scale_factor, 11 / scale_factor, 0 / scale_factor),
+    'BIO': (13 / scale_factor, 12 / scale_factor, 0 / scale_factor),
+    'Chemical': (14 / scale_factor, 13 / scale_factor, 0 / scale_factor),
+    'Civil': (15 / scale_factor, 14 / scale_factor, 0 / scale_factor),
     'Mechanical': (16 / scale_factor, 15 / scale_factor, 0 / scale_factor),
-    'SME': (16 / scale_factor, 16 / scale_factor, 0 / scale_factor),
-    'Electrical': (15 / scale_factor, 14 / scale_factor, 0 / scale_factor),
-    'Physics': (15 / scale_factor, 15 / scale_factor, 0 / scale_factor),
-    'SOLA': (15 / scale_factor, 16 / scale_factor, 0 / scale_factor),
+    'SME': (17 / scale_factor, 16 / scale_factor, 0 / scale_factor),
+    'Electrical': (18 / scale_factor, 17 / scale_factor, 0 / scale_factor),
+    'Physics': (19 / scale_factor, 18 / scale_factor, 0 / scale_factor),
+    'SOLA': (20 / scale_factor, 19 / scale_factor, 0 / scale_factor),
 
     # Hostels
-    'G1': (0 / scale_factor, 15 / scale_factor, 0 / scale_factor),
-    'G2': (0 / scale_factor, 14 / scale_factor, 0 / scale_factor),
-    'G3': (0 / scale_factor, 13 / scale_factor, 0 / scale_factor),
-    'G4': (-1 / scale_factor, 15 / scale_factor, 0 / scale_factor),
-    'G5': (-1 / scale_factor, 14 / scale_factor, 0 / scale_factor),
-    'G6': (-1 / scale_factor, 13 / scale_factor, 0 / scale_factor),
+    'G1': (-5 / scale_factor, 15 / scale_factor, 0 / scale_factor),
+    'G2': (-6 / scale_factor, 14 / scale_factor, 0 / scale_factor),
+    'G3': (-7 / scale_factor, 13 / scale_factor, 0 / scale_factor),
+    'G4': (-8 / scale_factor, 12 / scale_factor, 0 / scale_factor),
+    'G5': (-9 / scale_factor, 11 / scale_factor, 0 / scale_factor),
+    'G6': (-10 / scale_factor, 10 / scale_factor, 0 / scale_factor),
 
-    # Blocks and Old_Mess
-    'B1': (-14 / scale_factor, 0 / scale_factor, 0 / scale_factor),
-    'B2': (-15 / scale_factor, 0 / scale_factor, 0 / scale_factor),
-    'B3': (-15 / scale_factor, 0 / scale_factor, 0 / scale_factor),
-    'B4': (-14 / scale_factor, 1 / scale_factor, 0 / scale_factor),
-    'B5': (-15 / scale_factor, 1 / scale_factor, 0 / scale_factor),
-    'B6': (-16 / scale_factor, 1 / scale_factor, 0 / scale_factor),
-    'Old_Mess': (-7.5 / scale_factor, 7 / scale_factor, 0 / scale_factor),
+    # Blocks and Old Mess
+    'B1': (-15 / scale_factor, -2 / scale_factor, 0 / scale_factor),
+    'B2': (-16 / scale_factor, -3 / scale_factor, 0 / scale_factor),
+    'B3': (-17 / scale_factor, -3 / scale_factor, 0 / scale_factor),
+    'B4': (-18 / scale_factor, -2 / scale_factor, 0 / scale_factor),
+    'B5': (-19 / scale_factor, -1 / scale_factor, 0 / scale_factor),
+    'B6': (-20 / scale_factor, 0 / scale_factor, 0 / scale_factor),
+    'Old_Mess': (-12 / scale_factor, 8 / scale_factor, 0 / scale_factor),
 
     # Isolated Areas
-    'I2': (-3 / scale_factor, -4 / scale_factor, 0 / scale_factor),
-    'I3': (-3 / scale_factor, -3 / scale_factor, 0 / scale_factor),
-    'Director_House': (0 / scale_factor, -10 / scale_factor, 0 / scale_factor),
-    'Faculty_Quarters': (0 / scale_factor, -11 / scale_factor, 0 / scale_factor)
+    'I2': (-5 / scale_factor, -5 / scale_factor, 0 / scale_factor),
+    'I3': (-6 / scale_factor, -4 / scale_factor, 0 / scale_factor),
+    'Director_House': (-7 / scale_factor, -10 / scale_factor, 0 / scale_factor),
+    'Faculty_Quarters': (-8 / scale_factor, -11 / scale_factor, 0 / scale_factor)
 }
 
 

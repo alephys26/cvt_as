@@ -79,9 +79,9 @@ class CampusMapPublisher(Node):
                 room_marker.scale.x = 0.2
                 room_marker.scale.y = 0.2
                 room_marker.scale.z = 0.2
-                room_marker.color.r = 0.68
-                room_marker.color.g = 0.85
-                room_marker.color.b = 0.9
+                room_marker.color.r = 0.8
+                room_marker.color.g = 0.5
+                room_marker.color.b = 0.1
                 room_marker.color.a = 0.4
                 marker_array.markers.append(room_marker)
 
@@ -102,10 +102,10 @@ class CampusMapPublisher(Node):
                         line_marker.id = len(marker_array.markers)
                         line_marker.type = Marker.LINE_STRIP
                         line_marker.action = Marker.ADD
-                        line_marker.scale.x = 0.025
-                        line_marker.color.r = 0.72  # #B74F1F color (183, 79, 31)
-                        line_marker.color.g = 0.31
-                        line_marker.color.b = 0.12
+                        line_marker.scale.x = 0.03
+                        line_marker.color.r = 0.2
+                        line_marker.color.g = 0.3
+                        line_marker.color.b = 0.1
                         line_marker.color.a = 1.0
 
                         # Define points for the edge
@@ -136,10 +136,10 @@ class CampusMapPublisher(Node):
                         line_marker.id = len(marker_array.markers)
                         line_marker.type = Marker.LINE_STRIP
                         line_marker.action = Marker.ADD
-                        line_marker.scale.x = 0.025
-                        line_marker.color.r = 0.72  # #B74F1F color (183, 79, 31)
-                        line_marker.color.g = 0.31
-                        line_marker.color.b = 0.12
+                        line_marker.scale.x = 0.03
+                        line_marker.color.r = 0.2 
+                        line_marker.color.g = 0.3
+                        line_marker.color.b = 0.1
                         line_marker.color.a = 1.0
 
                         # Define points for the edge
@@ -170,10 +170,10 @@ class CampusMapPublisher(Node):
                         line_marker.id = len(marker_array.markers)
                         line_marker.type = Marker.LINE_STRIP
                         line_marker.action = Marker.ADD
-                        line_marker.scale.x = 0.025
-                        line_marker.color.r = 0.72  # #B74F1F color (183, 79, 31)
-                        line_marker.color.g = 0.31
-                        line_marker.color.b = 0.12
+                        line_marker.scale.x = 0.03
+                        line_marker.color.r = 0.2  
+                        line_marker.color.g = 0.3
+                        line_marker.color.b = 0.1
                         line_marker.color.a = 1.0
 
                         # Define points for the edge
