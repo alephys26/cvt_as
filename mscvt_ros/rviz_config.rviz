@@ -468,7 +468,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /visitor_location_marker_B4_F3_R103_P003
+        Value: /visitor_location_marker_B5_F2_R103_P001
       Value: true
     - Class: rviz_default_plugins/Marker
       Enabled: true

@@ -48,7 +48,7 @@ class CINode(Node):
             f"CINode ({self.agent.Id}) published availability message for visitor: {id}.")
 
     def handle_visitor_request(self, request, response):
-        if self.agent.visitor != None:
+        if self.agent.visitor != None and self.agent.visitor != request.visitorid:
             response.speed = 0.0
             response.points = []
             return response
@@ -116,9 +116,11 @@ class CINode(Node):
         self.get_logger().info(
             f"CINode ({self.agent.Id}) has traveled to {self.coordinates}. Travel count: {self.travelCount}.")
         if self.travelCount == 1:
+            self.coordinates = self.agent.path[-1]
             self.request_bi_service()
         elif self.travelCount == 2:
             sleep(self.waiting_time)
+            self.coordinates = self.agent.path[-1]
             if (self.waiting_time >= self.expected_time):
                 if self.agent.host[-7:] == 'F1_R101':
                     self.get_logger().warning(
@@ -129,8 +131,10 @@ class CINode(Node):
             self.agent.path = self.agent.path[::-1]
             self.travel()
         elif self.travelCount == 3:
+            self.coordinates = self.agent.path[-1]
             self.agent.path = self.agent.map[self.agent.destination][1][::-1]
         else:
+            self.coordinates = self.agent.path[-1]
             if self.cleared:
                 self.travelCount = 0
                 self.agent.visitor = None

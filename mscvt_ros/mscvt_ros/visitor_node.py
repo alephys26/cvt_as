@@ -54,9 +54,10 @@ class Visitor_Node(Node):
 
     def handleCIResponse(self, future):
         result = future.result()
-        if result.speed == 0:
-            if(self.timer == None):
-                self.timer = self.create_timer(3.0, self.searchForCI)
+        if result.speed == 0.0:
+            self.agent.ci = ''
+            self.timer = self.create_timer(3.0, self.searchForCI)
+            return
         if len(result.points) == 1 and self.checkNull(result.points):
             sleep(1.0)
             return self.talkWithCI()
@@ -99,13 +100,16 @@ class Visitor_Node(Node):
         if self.travelCount == 1:
             self.request.hostlocation = 'INSIDE'
             self.get_logger().info('Travel Count 1: Requesting CI inside')
+            self.coordinates = self.path[-1]
             self.talkWithCI()
         elif self.travelCount == 2:
             sleep(self.meeting_time)
+            self.coordinates = self.path[-1]
             self.path = self.path[::-1]
             self.get_logger().info('Travel Count 2: Reversing path')
             self.travel()
         elif self.travelCount == 3:
+            self.coordinates = self.path[-1]
             self.request.hostlocation = 'Main_Gate'
             self.get_logger().info('Travel Count 3: Requesting CI at Main Gate')
             self.talkWithCI()
