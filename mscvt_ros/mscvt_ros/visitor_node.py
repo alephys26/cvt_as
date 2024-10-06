@@ -54,6 +54,9 @@ class Visitor_Node(Node):
 
     def handleCIResponse(self, future):
         result = future.result()
+        if result.speed == 0:
+            if(self.timer == None):
+                self.timer = self.create_timer(3.0, self.searchForCI)
         if len(result.points) == 1 and self.checkNull(result.points):
             sleep(1.0)
             return self.talkWithCI()

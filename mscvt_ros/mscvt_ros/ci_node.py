@@ -48,6 +48,10 @@ class CINode(Node):
             f"CINode ({self.agent.Id}) published availability message for visitor: {id}.")
 
     def handle_visitor_request(self, request, response):
+        if self.agent.visitor != None:
+            response.speed = 0.0
+            response.points = []
+            return response
         if request.hostlocation == 'INSIDE':
             response.speed = self.agent.speed_dict['walk']
             if self.insideBuildingPath is not None:
